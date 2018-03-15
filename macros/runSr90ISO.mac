@@ -1,0 +1,57 @@
+##########################
+# Set the aliases for the rest of the macro file
+/control/alias R 35
+/control/alias N_R 2000000000
+/control/listAlias
+
+#########################
+# Set detector parameters
+#
+/G4LaBr3Detector/DetectorAngle 0. deg
+/G4LaBr3Detector/SourceRadius {R} cm
+
+##########################
+# Multi-threading mode
+#
+/run/numberOfThreads 8
+
+##########################
+# Set of the physic models
+#
+/cuts/setLowEdge 100 eV
+
+##########################
+# Set name for the output file
+#
+/analysis/setFileName Sr90_Nr_{N_R}_R_{R}_ISO
+
+##########################
+# Initialisation procedure
+#
+/run/initialize
+
+##########################################################################################
+# Model the particle source along the surface of a sphere surrounding the detector
+
+/gps/pos/type Surface
+/gps/pos/shape Sphere
+/gps/pos/centre 0. 0. 0. cm
+/gps/pos/radius {R} cm
+
+##########################################################################################
+# Use the cosine angular distribution
+/gps/ang/type cos
+/gps/ang/mintheta    0.000E+00 deg
+/gps/ang/maxtheta    9.000E+01 deg
+
+#########################
+# Set ion type and kinetic energy
+#
+/gps/particle ion
+/gps/ion 38 90 0 0
+/gps/energy 0 keV
+
+#########################
+# Run particles
+#
+/run/beamOn {N_R}

@@ -1,0 +1,92 @@
+# Macro file for the visualization setting in the initialization phase 
+
+##########################
+# Set the aliases for the rest of the macro file
+/control/alias Emean 100
+/control/alias Esigma 10
+/control/alias R 25
+/control/alias N_R 5
+/control/listAlias
+
+#########################
+# Set detector parameters
+#
+/G4LaBr3Detector/DetectorAngle 0. deg
+/G4LaBr3Detector/SourceRadius {R} cm
+
+##########################
+# Set name for the output file
+#
+/analysis/setFileName visualize_ISO
+
+##########################
+# Initialisation procedure
+#
+/run/initialize
+
+# Create empty scene
+/vis/scene/create
+/vis/open OGLSQt 800x800-0+0
+
+# Draw the scene
+/vis/drawVolume
+/vis/viewer/set/viewpointThetaPhi 0. 0. deg
+/vis/viewer/zoom 10.
+/vis/viewer/flush
+
+# Specify style (surface, wireframe, auxiliary edges,...)
+/vis/viewer/set/style s
+/vis/viewer/set/auxiliaryEdge false
+/vis/viewer/set/lineSegmentsPerCircle 100
+
+# Draw smooth trajectories at end of event, showing trajectory points
+# as markers 2 pixels wide:
+/vis/scene/add/trajectories
+#/vis/modeling/trajectories/create/drawByCharge
+#/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
+#/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 1
+
+# Particle Filter
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add gamma
+/vis/filtering/trajectories/particleFilter-0/add e-
+
+# Choose Particle Colour
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/set gamma red
+/vis/modeling/trajectories/drawByParticleID-0/set e- blue
+
+# Background Colour
+/vis/viewer/set/background 255 255 255 !
+
+# To superimpose all of the events from a given run:
+#/vis/scene/endOfEventAction accumulate {N_R}
+
+##########################################################################################
+# Model the particle source along the surface of a sphere surrounding the detector
+
+/gps/pos/type Surface
+/gps/pos/shape Sphere
+/gps/pos/centre 0. 0. 0. cm
+/gps/pos/radius {R} cm
+
+##########################################################################################
+# Use the cosine angular distribution
+/gps/ang/type cos
+/gps/ang/mintheta    0.000E+00 deg
+/gps/ang/maxtheta    9.000E+01 deg
+
+#########################
+# Set particle type, energy, and distribution
+#
+/gps/particle e-
+/gps/ene/type Gauss
+/gps/ene/mono {Emean} keV
+/gps/ene/sigma {Esigma} keV
+
+#########################
+# Run particles
+#
+/control/loop ./macros/rotate.mac theta 0 360 10
+/run/beamOn {N_R}
+#/vis/viewer/flush

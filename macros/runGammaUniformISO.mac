@@ -1,0 +1,230 @@
+##########################
+# Set the aliases for the rest of the macro file
+/control/alias R 35
+/control/alias N_R 2000000000
+/control/listAlias
+
+#########################
+# Set detector parameters
+#
+/G4LaBr3Detector/DetectorAngle 0. deg
+/G4LaBr3Detector/SourceRadius {R} cm
+
+##########################
+# Multi-threading mode
+#
+/run/numberOfThreads 8
+
+##########################
+# Set of the physic models
+#
+/cuts/setLowEdge 990 eV
+
+##########################
+# Set name for the output file
+#
+#/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO
+
+##########################
+# Initialisation procedure
+#
+/run/initialize
+
+##########################################################################################
+# Model the particle source along the surface of a sphere surrounding the detector
+
+/gps/pos/type Surface
+/gps/pos/shape Sphere
+/gps/pos/centre 0. 0. 0. cm
+/gps/pos/radius {R} cm
+
+##########################################################################################
+# Use the cosine angular distribution
+#
+/gps/ang/type cos
+/gps/ang/mintheta 0. deg
+/gps/ang/maxtheta 90. deg
+
+#########################
+# Set particle type and uniform energy distribution from a histogram
+#
+
+/gps/particle gamma
+/gps/ene/type Arb
+/gps/hist/type arb
+/gps/hist/point 0.01 999.0
+/gps/hist/point 0.0107977516233 925.192609401
+/gps/hist/point 0.0116591440118 856.838202692
+/gps/hist/point 0.0125892541179 793.53390649
+/gps/hist/point 0.0135935639088 734.906612205
+/gps/hist/point 0.0146779926762 680.610776989
+/gps/hist/point 0.0158489319246 630.326387136
+/gps/hist/point 0.0171132830416 583.75707196
+/gps/hist/point 0.0184784979742 540.62835702
+/gps/hist/point 0.0199526231497 500.686046394
+/gps/hist/point 0.0215443469003 463.694724478
+/gps/hist/point 0.0232630506715 429.436368474
+/gps/hist/point 0.0251188643151 397.709063383
+/gps/hist/point 0.0271227257933 368.325811946
+/gps/hist/point 0.0292864456463 341.113432496
+/gps/hist/point 0.0316227766017 315.911538251
+/gps/hist/point 0.0341454887383 292.571592006
+/gps/hist/point 0.0368694506452 270.956030675
+/gps/hist/point 0.0398107170553 250.937454508
+/gps/hist/point 0.0429866234708 232.397876209
+/gps/hist/point 0.0464158883361 215.228025534
+/gps/hist/point 0.0501187233627 199.326705265
+/gps/hist/point 0.0541169526546 184.600194762
+/gps/hist/point 0.0584341413374 170.961697586
+/gps/hist/point 0.063095734448 158.330829927
+/gps/hist/point 0.0681292069058 146.633146835
+/gps/hist/point 0.073564225446 135.799703449
+/gps/hist/point 0.0794328234724 125.766648638
+/gps/hist/point 0.0857695898591 116.474848678
+/gps/hist/point 0.0926118728129 107.869538717
+/gps/hist/point 0.1 99.9
+/gps/hist/point 0.107977516233 92.5192609401
+/gps/hist/point 0.116591440118 85.6838202692
+/gps/hist/point 0.125892541179 79.353390649
+/gps/hist/point 0.135935639088 73.4906612205
+/gps/hist/point 0.146779926762 68.0610776989
+/gps/hist/point 0.158489319246 63.0326387136
+/gps/hist/point 0.171132830416 58.375707196
+/gps/hist/point 0.184784979742 54.062835702
+/gps/hist/point 0.199526231497 50.0686046394
+/gps/hist/point 0.215443469003 46.3694724478
+/gps/hist/point 0.232630506715 42.9436368474
+/gps/hist/point 0.251188643151 39.7709063383
+/gps/hist/point 0.271227257933 36.8325811946
+/gps/hist/point 0.292864456463 34.1113432496
+/gps/hist/point 0.316227766017 31.5911538251
+/gps/hist/point 0.341454887383 29.2571592006
+/gps/hist/point 0.368694506452 27.0956030675
+/gps/hist/point 0.398107170553 25.0937454508
+/gps/hist/point 0.429866234708 23.2397876209
+/gps/hist/point 0.464158883361 21.5228025534
+/gps/hist/point 0.501187233627 19.9326705265
+/gps/hist/point 0.541169526546 18.4600194762
+/gps/hist/point 0.584341413374 17.0961697586
+/gps/hist/point 0.63095734448 15.8330829927
+/gps/hist/point 0.681292069058 14.6633146835
+/gps/hist/point 0.73564225446 13.5799703449
+/gps/hist/point 0.794328234724 12.5766648638
+/gps/hist/point 0.857695898591 11.6474848678
+/gps/hist/point 0.926118728129 10.7869538717
+/gps/hist/point 1.0 9.99
+/gps/hist/point 1.07977516233 9.25192609401
+/gps/hist/point 1.16591440118 8.56838202692
+/gps/hist/point 1.25892541179 7.9353390649
+/gps/hist/point 1.35935639088 7.34906612205
+/gps/hist/point 1.46779926762 6.80610776989
+/gps/hist/point 1.58489319246 6.30326387136
+/gps/hist/point 1.71132830416 5.8375707196
+/gps/hist/point 1.84784979742 5.4062835702
+/gps/hist/point 1.99526231497 5.00686046394
+/gps/hist/point 2.15443469003 4.63694724478
+/gps/hist/point 2.32630506715 4.29436368474
+/gps/hist/point 2.51188643151 3.97709063383
+/gps/hist/point 2.71227257933 3.68325811946
+/gps/hist/point 2.92864456463 3.41113432496
+/gps/hist/point 3.16227766017 3.15911538251
+/gps/hist/point 3.41454887383 2.92571592006
+/gps/hist/point 3.68694506452 2.70956030675
+/gps/hist/point 3.98107170553 2.50937454508
+/gps/hist/point 4.29866234708 2.32397876209
+/gps/hist/point 4.64158883361 2.15228025534
+/gps/hist/point 5.01187233627 1.99326705265
+/gps/hist/point 5.41169526546 1.84600194762
+/gps/hist/point 5.84341413374 1.70961697586
+/gps/hist/point 6.3095734448 1.58330829927
+/gps/hist/point 6.81292069058 1.46633146835
+/gps/hist/point 7.3564225446 1.35799703449
+/gps/hist/point 7.94328234724 1.25766648638
+/gps/hist/point 8.57695898591 1.16474848678
+/gps/hist/point 9.26118728129 1.07869538717
+/gps/hist/point 10.0 0.999
+/gps/hist/inter Log
+
+#########################
+# Run particles
+#
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_0
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_1
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_2
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_3
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_4
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_5
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_6
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_7
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_8
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_9
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_10
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_11
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_12
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_13
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_14
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_15
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_16
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_17
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_18
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_19
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_20
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_21
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_22
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_23
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_24
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_25
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_26
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_27
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_28
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_29
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_30
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_31
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_32
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_33
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_34
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_35
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_36
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_37
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_38
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_R_{R}_cm_Nr_{N_R}_ISO_39
+/run/beamOn {N_R}
