@@ -1,14 +1,14 @@
 ##########################
 # Set the aliases for the rest of the macro file
-/control/alias R 35
+/control/alias R 50
 /control/alias N_R 2000000000
 /control/listAlias
 
 #########################
 # Set detector parameters
 #
-/G4LaBr3Detector/DetectorAngle 0. deg
-/G4LaBr3Detector/SourceRadius {R} cm
+/G4PlasticDetector/DetectorAngle 0. deg
+/G4PlasticDetector/SourceRadius {R} cm
 
 ##########################
 # Multi-threading mode

@@ -43,34 +43,35 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
         // Standard Materials
         G4Material* fMatWorld;
-        G4Material* fMatHousing;
-        G4Material* fMatReflector;
-        G4Material* fMatLaBr3;
+        G4Material* fMatDetHousing;
+        G4Material* fMatEntranceWindow;
+        G4Material* fMatEJ204;
         G4Material* fMatLightGuide;
+        G4Material* fMatDetInterior;
+        G4Material* fMatPMT;
+        G4Material* fMatPMTInterior;
     
         // Logical Volumes
         G4LogicalVolume* WorldLogical;
         G4LogicalVolume* SourceLogical;
-        G4LogicalVolume* HousingLogical;
-        G4LogicalVolume* ReflectorLogical;
-        G4LogicalVolume* LaBr3Logical;
+        G4LogicalVolume* DetHousingLogical;
+        G4LogicalVolume* DetInteriorLogical;
+        G4LogicalVolume* EntranceWindowLogical;
+        G4LogicalVolume* ScintillatorLogical;
         G4LogicalVolume* LightGuideLogical;
+        G4LogicalVolume* PMTLogical;
+        G4LogicalVolume* PMTInteriorLogical;
     
         // Physical Volumes
         G4VPhysicalVolume* WorldPhysical;
         G4VPhysicalVolume* SourcePhysical;
-        G4VPhysicalVolume* HousingPhysical;
-        G4VPhysicalVolume* ReflectorPhysical;
-        G4VPhysicalVolume* LaBr3Physical;
+        G4VPhysicalVolume* DetHousingPhysical;
+        G4VPhysicalVolume* DetInteriorPhysical;
+        G4VPhysicalVolume* EntranceWindowPhysical;
+        G4VPhysicalVolume* ScintillatorPhysical;
         G4VPhysicalVolume* LightGuidePhysical;
-    
-        // Geometry Parameters
-        G4double fLaBr3Diameter;
-        G4double fLaBr3Length;
-        G4double fHousingThickness;
-        G4double fReflectorThickness;
-        G4double fLightGuideDiameter;
-        G4double fLightGuideThickness;
+        G4VPhysicalVolume* PMTPhysical;
+        G4VPhysicalVolume* PMTInteriorPhysical;
 
 	    // Rotation Angles
 	    G4double rotX;

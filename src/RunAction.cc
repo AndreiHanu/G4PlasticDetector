@@ -105,14 +105,7 @@ detector(det), particleGun(primary)
 	analysisManager->SetH2YAxisTitle(H_Mig_Electron, "Measured Energy (keV)");
 	analysisManager->SetH2ZAxisTitle(H_Mig_Electron, "# of Events");
 	analysisManager->SetH2Activation(H_Mig_Electron, true);
-  	
-  	// Create ntuple
-	/*
- 	analysisManager->CreateNtuple("G4SiDetector", "Etrue Edep");
-	analysisManager->CreateNtupleDColumn("eTrue");
- 	analysisManager->CreateNtupleDColumn("eDep");
- 	analysisManager->FinishNtuple();
-	*/
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

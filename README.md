@@ -31,9 +31,9 @@ To recompile, I typically just re-run the command in Step 3
 
 ## Scoring Physical Quantities
 Scoring of physical quantities is carried out through the G4MultiFunctionalDetector which allows multiple primitive scorers to be
-assigned to a single volume. In this simulation, a G4MultiFunctionalDetector is assigned to the sensitive volume of LaBr3 crystal and the source volume. The value recorded by the primitive scorers is collected on event-by-event basis enabling calculation of the detector response.
+assigned to a single volume. In this simulation, a G4MultiFunctionalDetector is assigned to the sensitive volume of EJ-204 plastic scintillator and the source volume. The value recorded by the primitive scorers is collected on event-by-event basis enabling calculation of the detector response.
 
-The primitive scorer(s) registered for the sensitive volume of LaBr3 crystal are:
+The primitive scorer(s) registered for the sensitive volume of EJ-204 plastic scintillator are:
 * G4PSEnergyDeposit
 
 The primitive scorer(s) registered for the source volume are custom kinetic energy scorers:

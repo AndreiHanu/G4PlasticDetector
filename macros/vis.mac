@@ -4,15 +4,15 @@
 # Set the aliases for the rest of the macro file
 /control/alias Emean 100
 /control/alias Esigma 10
-/control/alias R 25
+/control/alias R 50
 /control/alias N_R 5
 /control/listAlias
 
 #########################
 # Set detector parameters
 #
-/G4LaBr3Detector/DetectorAngle 0. deg
-/G4LaBr3Detector/SourceRadius {R} cm
+/G4PlasticDetector/DetectorAngle 0. deg
+/G4PlasticDetector/SourceRadius {R} cm
 
 ##########################
 # Set name for the output file
@@ -87,6 +87,6 @@
 #########################
 # Run particles
 #
-/control/loop ./macros/rotate.mac theta 0 360 10
-/run/beamOn {N_R}
+#/control/loop ./macros/rotate.mac theta 0 360 10
+#/run/beamOn {N_R}
 #/vis/viewer/flush

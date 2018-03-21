@@ -171,18 +171,6 @@ void PhysicsList::SetCuts()
 
 	// Default production thresholds for the world volume
  	SetCutsWithDefault();
- 	
- 	// Production thresholds for detector regions
-  	G4Region* region;
-  	G4String regName;
-  	G4ProductionCuts* cuts;
-  	
-  	// Production cuts for the Si detector 
-  	regName = "Region_LaBr3";
-  	region = G4RegionStore::GetInstance()->GetRegion(regName);
-  	cuts = new G4ProductionCuts;
-  	cuts->SetProductionCut(0.001*mm); // same cuts for gamma, e- and e+
-  	region->SetProductionCuts(cuts);
  	 
  	if (verboseLevel > 0) { DumpCutValuesTable(); }
 }
@@ -218,9 +206,9 @@ void PhysicsList::NewPAIModel(const G4ParticleDefinition* part,
 	G4String partname = part->GetParticleName();
   	if(modname == "pai") {
     	G4PAIModel* pai = new G4PAIModel(part,"PAIModel");
-    	fConfig->SetExtraEmModel(partname,procname,pai,"Region_LaBr3", 0.0,100.*TeV,pai);
+    	fConfig->SetExtraEmModel(partname,procname,pai,"", 0.0,100.*TeV,pai);
   	} else if(modname == "pai_photon") {
     	G4PAIPhotModel* pai = new G4PAIPhotModel(part,"PAIPhotModel");
-    	fConfig->SetExtraEmModel(partname,procname,pai,"Region_LaBr3", 0.0,100.*TeV,pai);
+    	fConfig->SetExtraEmModel(partname,procname,pai,"", 0.0,100.*TeV,pai);
   	}
 }

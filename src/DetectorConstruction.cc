@@ -26,12 +26,9 @@
 // ********************************************************************
 // G4SiDetector.cc
 //
-// Description: Definition of the Canberra PD450-15-500AM Passivated
-// Implanted Planar Silicon (PIPS) detector used by McMaster University
-// to perform dosimetry measurements for the lens of the eye.
-//
-// NOTE1: McMaster is actually using the ORTEC CR-020-450-500 detector
-// but the two models are essentially identical in terms of response.
+// Description: Definition of the Eljen Technologies M550-20x8-1 (P/N: 4467-2233)
+// plastic scintillator detector (EJ-204) that is used by McMaster University to
+// perform dosimetry measurements for the lens of eye.
 //
 // ********************************************************************
 
@@ -64,6 +61,7 @@
 #include "G4Box.hh"
 #include "G4Tubs.hh"
 #include "G4Sphere.hh"
+#include "G4Polycone.hh"
 
 // Boolean operations on volumes
 #include "G4UnionSolid.hh"
@@ -90,29 +88,11 @@
 DetectorConstruction::DetectorConstruction(): G4VUserDetectorConstruction(), fCheckOverlaps(true),
 WorldPhysical(0)
 {	
-	// Geometry Parameters (Default)
-
-	// LaBr3(Ce) Crystal
-	fLaBr3Diameter = 50.8*mm;
-	fLaBr3Length = 50.8*mm;
-
-	// Housing
-	fHousingThickness = 0.5*mm;
-
-	// Reflector
-	// The LaBr3(Ce) crystal is wrapped in a material acting as a Lambertian reflector surface
-	// which is designed to increase light collection efficiency 
-	fReflectorThickness = 2.0*mm;
-
-	// Light Guide
-	fLightGuideDiameter = fLaBr3Diameter;
-	fLightGuideThickness = 5.0*mm;
-
 	// Rotation Angle
 	rotX = 0.0*deg;		
 
 	// Source Radius
-	sourceRadius = 20.*cm;
+	sourceRadius = 50.*cm;
 			 
 	// Define Materials
 	DefineMaterials();
@@ -130,27 +110,19 @@ DetectorConstruction::~DetectorConstruction()
 
 void DetectorConstruction::DefineMaterials()
 {
-    
     // NIST Manager
 	G4NistManager* nistManager = G4NistManager::Instance();
 	nistManager->SetVerbose(0);
-
-	// Define elements
-	G4Element* elLa = nistManager->FindOrBuildElement(57);
-	G4Element* elBr = nistManager->FindOrBuildElement(35);
-
-  	// Define materials from elements
-  	G4Material* LaBr3 = new G4Material("LaBr3", 5.06*g/cm3, 2);
-  	LaBr3->AddElement(elLa, 0.366875);
-  	LaBr3->AddElement(elBr ,0.633124);
-	LaBr3->GetIonisation()->SetMeanExcitationEnergy(454.5*eV);
 	  
   	// Set the materials for the Geometry
 	fMatWorld = nistManager->FindOrBuildMaterial("G4_Galactic");
-    fMatHousing = nistManager->FindOrBuildMaterial("G4_Al");
-	fMatReflector = nistManager->FindOrBuildMaterial("G4_TEFLON");
-    fMatLaBr3 = LaBr3;
-    fMatLightGuide = nistManager->FindOrBuildMaterial("G4_Pyrex_Glass");
+	fMatDetHousing = nistManager->FindOrBuildMaterial("G4_Al");
+	fMatEntranceWindow = nistManager->FindOrBuildMaterial("G4_MYLAR");
+	fMatEJ204 = nistManager->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
+	fMatLightGuide = nistManager->FindOrBuildMaterial("G4_PLEXIGLASS");
+	fMatDetInterior = nistManager->FindOrBuildMaterial("G4_AIR");
+	fMatPMT = nistManager->FindOrBuildMaterial("G4_Pyrex_Glass");
+	fMatPMTInterior = nistManager->FindOrBuildMaterial("G4_Galactic");
   	
   	// Print materials
 	//G4cout << *(G4Material::GetMaterialTable()) << G4endl;
@@ -200,9 +172,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4VSolid* SourceSolid = new G4Sphere("SourceSolid", 0., sourceRadius/2, 0., 360.0*degree, 0., 180.0*degree);
 
 	SourceLogical = 
-		new G4LogicalVolume(SourceSolid,						// The Solid
-							fMatWorld,		    				// Material
-							"SourceLogical");	     			// Name
+		new G4LogicalVolume(SourceSolid,					// The Solid
+							fMatWorld,		    			// Material
+							"SourceLogical");	     		// Name
 
 	SourcePhysical = 
 		new G4PVPlacement(	0,								// No Rotation
@@ -216,18 +188,29 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 							
 	////////////////////////////////////////////////////////////////////////
 	// Construct the detector housing	
+	// numZPlanes
+	// zPlane
+	// rInner
+	// rOuter
+	G4double startPhi = 0.0*deg;
+   	G4double endPhi = 360.0*deg;
+   	G4int nrRZ = 8;
+   	G4double zPlane[]={0, 11.05*mm, 11.05*mm, 37.77*mm, 37.77*mm, 58.34*mm, 58.34*mm, 240.28*mm};
+   	G4double rInner[]={0, 0, 0, 0, 0, 0, 0, 0};
+	G4double rOuter[]={76.2/2*mm, 76.2/2*mm, 54.36/2*mm, 54.36/2*mm, 76.2/2*mm, 76.2/2*mm, 60.40/2*mm, 60.40/2*mm};
+
+   	G4VSolid* DetHousingSolid = new G4Polycone("Detector_Housing_Solid",
+	   											startPhi,
+												endPhi,
+												nrRZ,
+												zPlane,
+												rInner,
+												rOuter);
 	
-	G4VSolid* HousingSolid = new G4Tubs("Housing_Solid",
-										0., 
-										fLaBr3Diameter/2 + fReflectorThickness + fHousingThickness, 
-										(fLaBr3Length + fReflectorThickness + fLightGuideThickness + fHousingThickness)/2,
-										0.,
-										360.*deg);
-	
-	HousingLogical = 
-		new G4LogicalVolume(HousingSolid,					// The Solid
-							fMatHousing,    				// Material
-							"Housing_Logical");     		// Name
+	DetHousingLogical = 
+		new G4LogicalVolume(DetHousingSolid,				// The Solid
+							fMatDetHousing,    				// Material
+							"Detector_Housing_Logical");	// Name
 
 	// Rotation, Translation, and Transformation of the detector			
 	G4RotationMatrix Housing_Rot = G4RotationMatrix();
@@ -235,90 +218,171 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	
 	G4ThreeVector Housing_Trans = G4ThreeVector(0,0,0);
 			
-	HousingPhysical = 
+	DetHousingPhysical = 
 		new G4PVPlacement(	G4Transform3D(Housing_Rot,Housing_Trans),	// Translation
-							HousingLogical,					// Logical volume
-							"Housing_Physical",		        // Name
+							DetHousingLogical,					// Logical volume
+							"Detector_Housing_Physical",	// Name
 							SourceLogical,					// Mother volume
 							false,							// Unused boolean parameter
 							0,								// Copy number
 							fCheckOverlaps);				// Overlap Check
 
 	////////////////////////////////////////////////////////////////////////
-	// Construct the reflector
-	G4VSolid* ReflectorSolid = new G4Tubs("Reflector_Solid",
-										0., 
-										fLaBr3Diameter/2 + fReflectorThickness, 
-										(fLaBr3Length + fReflectorThickness + fLightGuideThickness)/2,
-										0.,
-										360.*deg);
+	// Construct the detector interior (air)	
+	// numZPlanes
+	// zPlane
+	// rInner
+	// rOuter
+	G4double startPhi2 = 0.0*deg;
+   	G4double endPhi2 = 360.0*deg; 
+	G4int nrRZ2 = 6;
+   	G4double zPlane2[]={0, 4.7*mm, 4.7*mm, 44.12*mm, 44.12*mm, 236.28*mm};
+   	G4double rInner2[]={0, 0, 0, 0, 0, 0};
+	G4double rOuter2[]={55.245/2*mm, 55.245/2*mm, 50.8/2*mm, 50.8/2*mm, 58.4/2*mm, 58.4/2*mm};
+   	
 
-	ReflectorLogical = 
-		new G4LogicalVolume(ReflectorSolid,					// The Solid
-							fMatReflector,		    		// Material
-							"Reflector_Logical");	     	// Name
+   	G4VSolid* DetInteriorSolid = new G4Polycone("Detector_Interior_Solid",
+	   											startPhi2,
+												endPhi2,
+												nrRZ2,
+												zPlane2,
+												rInner2,
+												rOuter2);
 	
-	ReflectorPhysical = 
+	DetInteriorLogical = 
+		new G4LogicalVolume(DetInteriorSolid,				// The Solid
+							fMatDetInterior,    			// Material
+							"Detector_Interior_Logical");	// Name
+			
+	DetInteriorPhysical = 
 		new G4PVPlacement(	0,								// No Rotation
-							G4ThreeVector(0,0,-fHousingThickness/2),
-							ReflectorLogical,				// Logical volume
-							"Reflector_Physical",			// Name
-							HousingLogical,					// Mother volume
+							G4ThreeVector(0,0,0),
+							DetInteriorLogical,				// Logical volume
+							"Detector_Interior_Physical",	// Name
+							DetHousingLogical,				// Mother volume
 							false,							// Unused boolean parameter
 							0,								// Copy number
 							fCheckOverlaps);				// Overlap Check
-	
+
 	////////////////////////////////////////////////////////////////////////
-	// Construct the LaBr3 crystal
-	G4VSolid* LaBr3Solid = new G4Tubs("LaBr3_Solid",
-										0., 
-										fLaBr3Diameter/2, 
-										fLaBr3Length/2,
-										0.,
-										360.*deg);
-	LaBr3Logical = 
-		new G4LogicalVolume(LaBr3Solid,						// The Solid
-							fMatLaBr3,    					// Material
-							"LaBr3_Logical");     			// Name
+	// Construct the Entrance Window
+   	G4VSolid* EntranceWindowSolid = new G4Tubs("Entrance_Window_Solid",
+	   										0.,
+											50./2*mm,
+											8.69/2*um,
+											0.,
+											360.*deg);
 
-	LaBr3Physical = 
+	EntranceWindowLogical = 
+		new G4LogicalVolume(EntranceWindowSolid,			// The Solid
+							fMatEntranceWindow,    			// Material
+							"Entrance_Window_Logical");		// Name
+
+	EntranceWindowPhysical = 
 		new G4PVPlacement(	0,								// No Rotation
-							G4ThreeVector(0,0,(fLightGuideThickness-fReflectorThickness)/2),
-							LaBr3Logical,					// Logical volume
-							"LaBr3Physical",				// Name
-							ReflectorLogical,				// Mother volume
+							G4ThreeVector(0,0,4.7*mm - 8.69/2*um),
+							EntranceWindowLogical,			// Logical volume
+							"Entrance_Window_Physical",		// Name
+							DetInteriorLogical,				// Mother volume
 							false,							// Unused boolean parameter
 							0,								// Copy number
-							fCheckOverlaps);				// Overlap Check
+							fCheckOverlaps); 				// Overlap Check
 
-	// Create a region for the LaBr3 crystal so we can apply the PAI model to it
-	G4Region* regLaBr3 = new G4Region("Region_LaBr3");
-  	LaBr3Logical->SetRegion(regLaBr3);
-	regLaBr3->AddRootLogicalVolume(LaBr3Logical);
+	////////////////////////////////////////////////////////////////////////
+	// Construct the EJ-204 Scintillator
+   	G4VSolid* ScintillatorSolid = new G4Tubs("Scintillator_Interior_Solid",
+	   										0.,
+											50./2*mm,
+											20./2*mm,
+											0.,
+											360.*deg);
+
+	ScintillatorLogical = 
+		new G4LogicalVolume(ScintillatorSolid,					// The Solid
+							fMatEJ204,    						// Material
+							"Scintillator_Interior_Logical");	// Name
+
+	ScintillatorPhysical = 
+		new G4PVPlacement(	0,								// No Rotation
+							G4ThreeVector(0,0,4.7*mm + 20./2*mm),
+							ScintillatorLogical,			// Logical volume
+							"Scintillator_Interior_Physical",		// Name
+							DetInteriorLogical,				// Mother volume
+							false,							// Unused boolean parameter
+							0,								// Copy number
+							fCheckOverlaps); 				// Overlap Check
 	
 	////////////////////////////////////////////////////////////////////////
 	// Construct the light guide
-	G4VSolid* LightGuideSolid = new G4Tubs("LightGuide_Solid",
-										0., 
-										fLightGuideDiameter/2, 
-										fLightGuideThickness/2,
-										0.,
-										360.*deg);
+   	G4VSolid* LightGuideSolid = new G4Tubs("Light Guide_Solid",
+	   										0.,
+											50./2*mm,
+											20./2*mm,
+											0.,
+											360.*deg);
 
 	LightGuideLogical = 
 		new G4LogicalVolume(LightGuideSolid,				// The Solid
 							fMatLightGuide,    				// Material
-							"LightGuideLogical");     		// Name
+							"Light_Guide_Logical");			// Name
 
 	LightGuidePhysical = 
 		new G4PVPlacement(	0,								// No Rotation
-							G4ThreeVector(0,0,-(fLaBr3Length + fReflectorThickness)/2),
+							G4ThreeVector(0,0,4.7*mm + 20.*mm + 20./2*mm),
 							LightGuideLogical,				// Logical volume
-							"LightGuidePhysical",			// Name
-							ReflectorLogical,				// Mother volume
+							"Light_Guide_Physical",			// Name
+							DetInteriorLogical,				// Mother volume
 							false,							// Unused boolean parameter
 							0,								// Copy number
-							fCheckOverlaps);				// Overlap Check
+							fCheckOverlaps); 				// Overlap Check
+
+	////////////////////////////////////////////////////////////////////////
+	// Construct the PMT (glass)
+   	G4VSolid* PMTSolid = new G4Tubs("PMT_Solid",
+	   								0.,
+									52./2*mm,
+									112./2*mm,
+									0.,
+									360.*deg);
+
+	PMTLogical = 
+		new G4LogicalVolume(PMTSolid,						// The Solid
+							fMatPMT,    					// Material
+							"PMT_Logical");					// Name
+
+	PMTPhysical = 
+		new G4PVPlacement(	0,								// No Rotation
+							G4ThreeVector(0,0,4.7*mm + 20.*mm + 20.*mm + 112./2*mm),
+							PMTLogical,						// Logical volume
+							"PMT_Physical",					// Name
+							DetInteriorLogical,				// Mother volume
+							false,							// Unused boolean parameter
+							0,								// Copy number
+							fCheckOverlaps); 				// Overlap Check
+						
+	////////////////////////////////////////////////////////////////////////
+	// Construct the PMT Interior (air)
+   	G4VSolid* PMTInteriorSolid = new G4Tubs("PMT_Interior_Solid",
+	   								0.,
+									46./2*mm,
+									106./2*mm,
+									0.,
+									360.*deg);
+
+	PMTInteriorLogical = 
+		new G4LogicalVolume(PMTInteriorSolid,				// The Solid
+							fMatPMTInterior,    			// Material
+							"PMT_Interior_Logical");		// Name
+
+	PMTInteriorPhysical = 
+		new G4PVPlacement(	0,								// No Rotation
+							G4ThreeVector(0,0,0),
+							PMTInteriorLogical,				// Logical volume
+							"PMT_Interior_Physical",		// Name
+							PMTLogical,						// Mother volume
+							false,							// Unused boolean parameter
+							0,								// Copy number
+							fCheckOverlaps); 				// Overlap Check
 
 	////////////////////////////////////////////////////////////////////////
   	// Visualisation attributes
@@ -329,20 +393,46 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   	WorldLogical->SetVisAttributes(Vis_World);
 
 	// Source Volume (Light Yellow)
-    G4VisAttributes* Vis_Source = new G4VisAttributes(G4Colour(1.,1.,1.,0.));
+    G4VisAttributes* Vis_Source = new G4VisAttributes(G4Colour(1.,1.,0.,0.5));
     Vis_Source->SetForceWireframe(true);
     SourceLogical->SetVisAttributes(Vis_Source);
 
     // Housing Volume (Gray)
     G4VisAttributes* Vis_Housing = new G4VisAttributes(G4Colour(0.5,0.5,0.5,.2));
     Vis_Housing->SetForceWireframe(false);
-    HousingLogical->SetVisAttributes(Vis_Housing);
+    DetHousingLogical->SetVisAttributes(Vis_Housing);
 
-	// Reflector (Cyan)
-    G4VisAttributes* Vis_Reflector = new G4VisAttributes(G4Colour(0.,1.0,1.0,0.2));
-    Vis_Reflector->SetForceWireframe(false);
-    ReflectorLogical->SetVisAttributes(Vis_Reflector);
+	// Housing Interior (Cyan)
+    G4VisAttributes* Vis_Housing_Interior = new G4VisAttributes(G4Colour(0.,1.0,0.,0.1));
+    Vis_Housing_Interior->SetForceWireframe(false);
+    DetInteriorLogical->SetVisAttributes(Vis_Housing_Interior);
 
+	// Entrance Window
+    G4VisAttributes* Vis_EntranceWindow_Interior = new G4VisAttributes(G4Colour(1.,0.,1.0,0.4));
+    Vis_EntranceWindow_Interior->SetForceWireframe(false);
+    EntranceWindowLogical->SetVisAttributes(Vis_EntranceWindow_Interior);
+
+	// Scintillator Interior (Cyan)
+    G4VisAttributes* Vis_Scintillator_Interior = new G4VisAttributes(G4Colour(0.,1.0,1.0,0.4));
+    Vis_Scintillator_Interior->SetForceWireframe(false);
+    ScintillatorLogical->SetVisAttributes(Vis_Scintillator_Interior);
+
+	// Light Guide (Red)
+    G4VisAttributes* Vis_LightGuide = new G4VisAttributes(G4Colour(1.,0.,0.,0.3));
+    Vis_LightGuide->SetForceWireframe(false);
+    LightGuideLogical->SetVisAttributes(Vis_LightGuide);
+	
+	// PMT Glass (Magenta)
+    G4VisAttributes* Vis_PMT = new G4VisAttributes(G4Colour(1.,0.,1.,0.5));
+    Vis_PMT->SetForceWireframe(false);
+    PMTLogical->SetVisAttributes(Vis_PMT);
+
+	// PMT Interior (White)
+    G4VisAttributes* Vis_PMT_Interior = new G4VisAttributes(G4Colour(1.,1.,1.,0.5));
+    Vis_PMT_Interior->SetForceWireframe(false);
+    PMTInteriorLogical->SetVisAttributes(Vis_PMT_Interior);
+	
+	/*
 	// LaBr3 crystal (Magenta)
     G4VisAttributes* Vis_LaBr3 = new G4VisAttributes(G4Colour(1.,0.,1.,1.));
     Vis_LaBr3->SetForceWireframe(false);
@@ -352,6 +442,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4VisAttributes* Vis_LightGuide = new G4VisAttributes(G4Colour(0.,0.,1.,0.3));
     Vis_LightGuide->SetForceWireframe(false);
     LightGuideLogical->SetVisAttributes(Vis_LightGuide);
+	*/
 
 	////////////////////////////////////////////////////////////////////////
 	// Return world volume
@@ -368,15 +459,15 @@ void DetectorConstruction::ConstructSDandField()
   	G4SDParticleFilter* electronFilter = new G4SDParticleFilter(filterName="electronFilter",particleName="e-");
 	
 	////////////////////////////////////////////////////////////////////////
-	// Construct the Multi Functional Detector for the Si chip
+	// Construct the Multi Functional Detector
 	
-	G4MultiFunctionalDetector* LaBr3Scorer = new G4MultiFunctionalDetector("LaBr3");
-	G4SDManager::GetSDMpointer()->AddNewDetector(LaBr3Scorer);	
+	G4MultiFunctionalDetector* PlasticDetectorScorer = new G4MultiFunctionalDetector("PlasticDetector");
+	G4SDManager::GetSDMpointer()->AddNewDetector(PlasticDetectorScorer);	
 	G4SDManager::GetSDMpointer()->SetVerboseLevel(0);
-	LaBr3Logical->SetSensitiveDetector(LaBr3Scorer);
+	DetHousingLogical->SetSensitiveDetector(PlasticDetectorScorer);
  	
  	G4PSEnergyDeposit* eDep = new G4PSEnergyDeposit("eDep");
-    LaBr3Scorer->RegisterPrimitive(eDep);
+    PlasticDetectorScorer->RegisterPrimitive(eDep);
 	
 	G4MultiFunctionalDetector* SourceScorer = new G4MultiFunctionalDetector("Source");
 	G4SDManager::GetSDMpointer()->AddNewDetector(SourceScorer);	
@@ -397,7 +488,7 @@ void DetectorConstruction::ConstructSDandField()
 void DetectorConstruction::SetDetectorAngle(G4double val)
 {
 	if(WorldPhysical) {    
-    	G4Exception ("DetectorConstruction::SetDetectorAngle()", "G4LaBr3Detector", 
+    	G4Exception ("DetectorConstruction::SetDetectorAngle()", "G4PlasticDetector", 
                  	JustWarning, 
                  	"Attempt to change already constructed geometry is ignored");
   	} else {
@@ -410,7 +501,7 @@ void DetectorConstruction::SetDetectorAngle(G4double val)
 void DetectorConstruction::SetSourceRadius(G4double val)
 {
 	if(WorldPhysical) {    
-    	G4Exception ("DetectorConstruction::SetSourceRadius()", "G4LaBr3Detector", 
+    	G4Exception ("DetectorConstruction::SetSourceRadius()", "G4PlasticDetector", 
                  	JustWarning, 
                  	"Attempt to change already constructed geometry is ignored");
   	} else {
@@ -439,7 +530,7 @@ G4double DetectorConstruction::GetSourceRadius()
 void DetectorConstruction::DefineCommands()
 {
     // Define command directory using generic messenger class
-    fMessenger = new G4GenericMessenger(this, "/G4LaBr3Detector/", "Geometry control");
+    fMessenger = new G4GenericMessenger(this, "/G4PlasticDetector/", "Geometry control");
 
     // Detector Angle Command
     G4GenericMessenger::Command& DetectorAngleCmd

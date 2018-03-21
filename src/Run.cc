@@ -19,7 +19,7 @@ detector(det), particleGun(primary)
 {
 	G4SDManager* SDMan = G4SDManager::GetSDMpointer(); 
     	
-    ID_eDep = SDMan->GetCollectionID("LaBr3/eDep");
+    ID_eDep = SDMan->GetCollectionID("PlasticDetector/eDep");
 	ID_kinEGamma = SDMan->GetCollectionID("Source/kinEGamma");
 	ID_kinEElectron = SDMan->GetCollectionID("Source/kinEElectron");
 }
