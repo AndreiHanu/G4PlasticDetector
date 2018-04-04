@@ -5,7 +5,7 @@
 /control/alias alpha -4
 /control/alias Emean 600
 /control/alias Esigma 100
-/control/alias R 35
+/control/alias R 50
 /control/alias N_R 200000000
 /control/listAlias
 

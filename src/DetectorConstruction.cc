@@ -460,11 +460,10 @@ void DetectorConstruction::ConstructSDandField()
 	
 	////////////////////////////////////////////////////////////////////////
 	// Construct the Multi Functional Detector
-	
 	G4MultiFunctionalDetector* PlasticDetectorScorer = new G4MultiFunctionalDetector("PlasticDetector");
 	G4SDManager::GetSDMpointer()->AddNewDetector(PlasticDetectorScorer);	
 	G4SDManager::GetSDMpointer()->SetVerboseLevel(0);
-	DetHousingLogical->SetSensitiveDetector(PlasticDetectorScorer);
+	ScintillatorLogical->SetSensitiveDetector(PlasticDetectorScorer);
  	
  	G4PSEnergyDeposit* eDep = new G4PSEnergyDeposit("eDep");
     PlasticDetectorScorer->RegisterPrimitive(eDep);
