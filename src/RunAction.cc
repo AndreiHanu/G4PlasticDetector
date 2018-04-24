@@ -44,9 +44,9 @@ detector(det), particleGun(primary)
 	G4double ELowLog = 10.;
 	G4double ELowLin = 10.;
     G4double EHighLog = 10000.;
-	G4double EHighLin = 10000.;
+	G4double EHighLin = 3600.;
     G4int nBinsLog = 90;
-	G4int nBinsLin = 1024;
+	G4int nBinsLin = 359;
 
     G4double dlog = (std::log10(EHighLog) - std::log10(ELowLog))/nBinsLog;
 	G4double dx = std::pow(10, dlog);
@@ -74,25 +74,50 @@ detector(det), particleGun(primary)
 	analysisManager->SetH1YAxisTitle(H_Source_Gamma, "Fluence (cm^{-2})");
 	analysisManager->SetH1Activation(H_Source_Gamma, true);
 
+	G4int H_Source_Gamma_Lin = analysisManager->CreateH1("Source Spectrum (Gamma) Linear", "Source Spectrum for Gammas", EdgesLin);
+	analysisManager->SetH1XAxisTitle(H_Source_Gamma_Lin, "True Energy (keV)");
+	analysisManager->SetH1YAxisTitle(H_Source_Gamma_Lin, "Fluence (cm^{-2})");
+	analysisManager->SetH1Activation(H_Source_Gamma_Lin, true);
+
 	G4int H_Source_Electron = analysisManager->CreateH1("Source Spectrum (Electron)", "Source Spectrum for Electrons", EdgesLog);
 	analysisManager->SetH1XAxisTitle(H_Source_Electron, "True Energy (keV)");
 	analysisManager->SetH1YAxisTitle(H_Source_Electron, "Fluence (cm^{-2})");
 	analysisManager->SetH1Activation(H_Source_Electron, true);
 
+	G4int H_Source_Electron_Lin = analysisManager->CreateH1("Source Spectrum (Electron) Linear", "Source Spectrum for Electrons", EdgesLin);
+	analysisManager->SetH1XAxisTitle(H_Source_Electron_Lin, "True Energy (keV)");
+	analysisManager->SetH1YAxisTitle(H_Source_Electron_Lin, "Fluence (cm^{-2})");
+	analysisManager->SetH1Activation(H_Source_Electron_Lin, true);
+
 	G4int H_True_Gamma = analysisManager->CreateH1("Detector True Spectrum (Gamma)", "Detector True Spectrum for Gammas", EdgesLog);
 	analysisManager->SetH1XAxisTitle(H_True_Gamma, "True Energy (keV)");
 	analysisManager->SetH1YAxisTitle(H_True_Gamma, "# of Events");
 	analysisManager->SetH1Activation(H_True_Gamma, true);
+
+	G4int H_True_Gamma_Lin = analysisManager->CreateH1("Detector True Spectrum (Gamma) Linear", "Detector True Spectrum for Gammas", EdgesLin);
+	analysisManager->SetH1XAxisTitle(H_True_Gamma_Lin, "True Energy (keV)");
+	analysisManager->SetH1YAxisTitle(H_True_Gamma_Lin, "# of Events");
+	analysisManager->SetH1Activation(H_True_Gamma_Lin, true);
 	
 	G4int H_True_Electron = analysisManager->CreateH1("Detector True Spectrum (Electron)", "Detector True Spectrum for Electrons", EdgesLog);
 	analysisManager->SetH1XAxisTitle(H_True_Electron, "True Energy (keV)");
 	analysisManager->SetH1YAxisTitle(H_True_Electron, "# of Events");
 	analysisManager->SetH1Activation(H_True_Electron, true);
 
+	G4int H_True_Electron_Lin = analysisManager->CreateH1("Detector True Spectrum (Electron) Linear", "Detector True Spectrum for Electrons", EdgesLin);
+	analysisManager->SetH1XAxisTitle(H_True_Electron_Lin, "True Energy (keV)");
+	analysisManager->SetH1YAxisTitle(H_True_Electron_Lin, "# of Events");
+	analysisManager->SetH1Activation(H_True_Electron_Lin, true);
+
 	G4int H_Measured = analysisManager->CreateH1("Detector Measured Spectrum", "Detector Measured Spectrum", EdgesLog);
 	analysisManager->SetH1XAxisTitle(H_Measured, "Measured Energy (keV)");
 	analysisManager->SetH1YAxisTitle(H_Measured, "# of Events");
 	analysisManager->SetH1Activation(H_Measured, true);
+
+	G4int H_Measured_Lin = analysisManager->CreateH1("Detector Measured Spectrum Linear", "Detector Measured Spectrum", EdgesLin);
+	analysisManager->SetH1XAxisTitle(H_Measured_Lin, "Measured Energy (keV)");
+	analysisManager->SetH1YAxisTitle(H_Measured_Lin, "# of Events");
+	analysisManager->SetH1Activation(H_Measured_Lin, true);
 
 	G4int H_Mig_Gamma = analysisManager->CreateH2("Energy Migration Matrix (Gamma)", "Energy Migration Matrix for Gammas", EdgesLog, EdgesLog);
 	analysisManager->SetH2XAxisTitle(H_Mig_Gamma, "True Energy (keV)");
@@ -100,11 +125,23 @@ detector(det), particleGun(primary)
 	analysisManager->SetH2ZAxisTitle(H_Mig_Gamma, "# of Events");
 	analysisManager->SetH2Activation(H_Mig_Gamma, true);
 
+	G4int H_Mig_Gamma_Lin = analysisManager->CreateH2("Energy Migration Matrix (Gamma) Linear", "Energy Migration Matrix for Gammas", EdgesLin, EdgesLin);
+	analysisManager->SetH2XAxisTitle(H_Mig_Gamma_Lin, "True Energy (keV)");
+	analysisManager->SetH2YAxisTitle(H_Mig_Gamma_Lin, "Measured Energy (keV)");
+	analysisManager->SetH2ZAxisTitle(H_Mig_Gamma_Lin, "# of Events");
+	analysisManager->SetH2Activation(H_Mig_Gamma_Lin, true);
+
 	G4int H_Mig_Electron = analysisManager->CreateH2("Energy Migration Matrix (Electron)", "Energy Migration Matrix for Electrons", EdgesLog, EdgesLog);
 	analysisManager->SetH2XAxisTitle(H_Mig_Electron, "True Energy (keV)");
 	analysisManager->SetH2YAxisTitle(H_Mig_Electron, "Measured Energy (keV)");
 	analysisManager->SetH2ZAxisTitle(H_Mig_Electron, "# of Events");
 	analysisManager->SetH2Activation(H_Mig_Electron, true);
+
+	G4int H_Mig_Electron_Lin = analysisManager->CreateH2("Energy Migration Matrix (Electron) Linear", "Energy Migration Matrix for Electrons", EdgesLin, EdgesLin);
+	analysisManager->SetH2XAxisTitle(H_Mig_Electron_Lin, "True Energy (keV)");
+	analysisManager->SetH2YAxisTitle(H_Mig_Electron_Lin, "Measured Energy (keV)");
+	analysisManager->SetH2ZAxisTitle(H_Mig_Electron_Lin, "# of Events");
+	analysisManager->SetH2Activation(H_Mig_Electron_Lin, true);
 
 }
 

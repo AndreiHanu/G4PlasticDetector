@@ -53,21 +53,6 @@ void Run::RecordEvent(const G4Event* event)
 	G4THitsMap<G4double>* event_kinEElectron = (G4THitsMap<G4double>*)(HCE->GetHC(ID_kinEElectron));
 	
 	std::map<G4int,G4double*>::iterator itr;
-	
-	// Get the total energy deposited for this event
-	for (itr = event_eDep->GetMap()->begin(); itr != event_eDep->GetMap()->end(); itr++) {
-		eDep += *(itr->second);
-	}
-
-	// Get the incident kinetic energy for gammas in this event
-	for (itr = event_kinEGamma->GetMap()->begin(); itr != event_kinEGamma->GetMap()->end(); itr++) {
-		kinEGamma += *(itr->second);
-	}
-
-	// Get the incident kinetic energy for electrons in this event
-	for (itr = event_kinEElectron->GetMap()->begin(); itr != event_kinEElectron->GetMap()->end(); itr++) {
-		kinEElectron += *(itr->second);
-	}
 
 	// Get analysis manager
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
@@ -76,32 +61,45 @@ void Run::RecordEvent(const G4Event* event)
 	G4double fluence = 1/(3.14159*std::pow(detector->GetSourceRadius()/cm, 2)*(std::pow(std::sin(particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMaxTheta()), 2)-std::pow(std::sin(particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMinTheta()), 2)));
 	//G4double fluence = 1.;
 	
-	/*
-	G4cout << "MaxTheta: " << particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMaxTheta()/degree
-		   << " MinTheta: " << particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMinTheta()/degree
-		   << " Fluence: " << fluence << G4endl;
-	*/
+	// Get the total energy deposited for this event
+	for (itr = event_eDep->GetMap()->begin(); itr != event_eDep->GetMap()->end(); itr++) {
+		eDep += *(itr->second);
+	}
 
-	// Score the source, true detected, and energy migration matrix
-	if (kinEGamma > 0){ 
-		analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Gamma)"), kinEGamma/keV, fluence);
-		if (eDep > 0){
-			analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Gamma)"), kinEGamma/keV);
-			analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Gamma)"), kinEGamma/keV, eDep/keV);
+	// Get the incident kinetic energy for gammas in this event
+	for (itr = event_kinEGamma->GetMap()->begin(); itr != event_kinEGamma->GetMap()->end(); itr++) {
+		kinEGamma = *(itr->second);
+		if (kinEGamma > 0){ 
+			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Gamma)"), kinEGamma/keV, fluence);
+			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Gamma) Linear"), kinEGamma/keV, fluence);
+			if (eDep > 0){
+				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Gamma)"), kinEGamma/keV);
+				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Gamma) Linear"), kinEGamma/keV);
+				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Gamma)"), kinEGamma/keV, eDep/keV);
+				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Gamma) Linear"), kinEGamma/keV, eDep/keV);
+			}
 		}
 	}
-	
-	if (kinEElectron > 0){
-		analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Electron)"), kinEElectron/keV, fluence);
-		if (eDep > 0){
-			analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Electron)"), kinEElectron/keV);
-			analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Electron)"), kinEElectron/keV, eDep/keV);
+
+	// Get the incident kinetic energy for electrons in this event
+	for (itr = event_kinEElectron->GetMap()->begin(); itr != event_kinEElectron->GetMap()->end(); itr++) {
+		kinEElectron = *(itr->second);
+		if (kinEElectron > 0){
+			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Electron)"), kinEElectron/keV, fluence);
+			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Electron) Linear"), kinEElectron/keV, fluence);
+			if (eDep > 0){
+				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Electron)"), kinEElectron/keV);
+				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Electron) Linear"), kinEElectron/keV);
+				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Electron)"), kinEElectron/keV, eDep/keV);
+				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Electron) Linear"), kinEElectron/keV, eDep/keV);
+			}
 		}
 	}
 
 	// Record events with non-zero deposited energy
 	if (eDep > 0) {
 		analysisManager->FillH1(analysisManager->GetH1Id("Detector Measured Spectrum"), eDep/keV);
+		analysisManager->FillH1(analysisManager->GetH1Id("Detector Measured Spectrum Linear"), eDep/keV);
 	}
 	
 	// Invoke base class method

@@ -4,8 +4,8 @@
 # Set the aliases for the rest of the macro file
 /control/alias Emean 100
 /control/alias Esigma 10
-/control/alias R 50
-/control/alias N_R 5
+/control/alias R 25
+/control/alias N_R 2
 /control/listAlias
 
 #########################
@@ -31,7 +31,7 @@
 # Draw the scene
 /vis/drawVolume
 /vis/viewer/set/viewpointThetaPhi 0. 0. deg
-/vis/viewer/zoom 10.
+/vis/viewer/zoom 1.5
 /vis/viewer/flush
 
 # Specify style (surface, wireframe, auxiliary edges,...)
@@ -54,39 +54,49 @@
 # Choose Particle Colour
 /vis/modeling/trajectories/create/drawByParticleID
 /vis/modeling/trajectories/drawByParticleID-0/set gamma red
-/vis/modeling/trajectories/drawByParticleID-0/set e- blue
+/vis/modeling/trajectories/drawByParticleID-0/set e- yellow
 
 # Background Colour
-/vis/viewer/set/background 255 255 255 !
+#/vis/viewer/set/background 255 255 255 !
 
 # To superimpose all of the events from a given run:
-#/vis/scene/endOfEventAction accumulate {N_R}
+/vis/scene/endOfEventAction accumulate {N_R}
 
-##########################################################################################
-# Model the particle source along the surface of a sphere surrounding the detector
-
+##########################
+# Create the first particle.  This can be done using any of the GPS macro
+# commands. 
+/gps/source/intensity 1
+/gps/particle gamma
+/gps/ene/type Gauss
+/gps/ene/mono {Emean} keV
+/gps/ene/sigma {Esigma} keV
 /gps/pos/type Surface
 /gps/pos/shape Sphere
 /gps/pos/centre 0. 0. 0. cm
 /gps/pos/radius {R} cm
+/gps/ang/type cos
+/gps/ang/mintheta    0.000E+00 deg
+/gps/ang/maxtheta    9.000E+01 deg
 
-##########################################################################################
-# Use the cosine angular distribution
+##########################
+# Create the second particle.  This can be done using any of the GPS macro
+# commands.  The position will be overridden below.
+/gps/source/add 1
+/gps/particle e-
+/gps/ene/type Gauss
+/gps/ene/mono {Emean} keV
+/gps/ene/sigma {Esigma} keV
+/gps/pos/type Surface
+/gps/pos/shape Sphere
+/gps/pos/centre 0. 0. 0. cm
+/gps/pos/radius {R} cm
 /gps/ang/type cos
 /gps/ang/mintheta    0.000E+00 deg
 /gps/ang/maxtheta    9.000E+01 deg
 
 #########################
-# Set particle type, energy, and distribution
-#
-/gps/particle e-
-/gps/ene/type Gauss
-/gps/ene/mono {Emean} keV
-/gps/ene/sigma {Esigma} keV
-
-#########################
 # Run particles
 #
-#/control/loop ./macros/rotate.mac theta 0 360 10
+/control/loop ./macros/rotate.mac theta 0 360 1
 #/run/beamOn {N_R}
 #/vis/viewer/flush

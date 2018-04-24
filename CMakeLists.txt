@@ -40,10 +40,13 @@ target_link_libraries(G4PlasticDetector ${Geant4_LIBRARIES})
 set(G4PLASTICDETECTOR_SCRIPTS
   macros/vis.mac
   macros/rotate.mac
-  macros/runElectronUniformISO.mac
+  macros/runElectronUniformLinISO.mac
+  macros/runElectronUniformLogISO.mac
   macros/runGammaPowerElectronGaussianISO.mac
-  macros/runGammaUniformISO.mac
+  macros/runGammaUniformLinISO.mac
+  macros/runGammaUniformLogISO.mac
   macros/runGammaPowerISO.mac
+  macros/runCl36ISO.mac
   macros/runCo60ISO.mac
   macros/runCs137ISO.mac
   macros/runSr90ISO.mac

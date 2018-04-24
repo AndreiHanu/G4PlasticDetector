@@ -79,6 +79,9 @@
 #include "G4PSTrackLength.hh"
 #include "G4PSPassageTrackLength.hh"
 #include "G4PSSphereSurfaceCurrent.hh"
+#include "G4PSSphereSurfaceCurrent3D.hh"
+#include "G4PSSphereSurfaceFlux.hh"
+#include "G4PSSphereSurfaceFlux3D.hh"
 #include "G4PSIncidentKineticEnergy.hh"
 #include "G4SDParticleFilter.hh"
 
@@ -92,7 +95,7 @@ WorldPhysical(0)
 	rotX = 0.0*deg;		
 
 	// Source Radius
-	sourceRadius = 50.*cm;
+	sourceRadius = 25.*cm;
 			 
 	// Define Materials
 	DefineMaterials();
@@ -166,10 +169,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 	////////////////////////////////////////////////////////////////////////
 	// Construct the Source sphere
-	// Note: The actual radius of the Source solid will be slightly smaller (0.1 mm) than
+	// Note: The actual radius of the Source solid will be slightly smaller (1 mm) than
 	// specified in the macro files in order to allow tracking the incident kinetic energy
 	// of particles.
-	G4VSolid* SourceSolid = new G4Sphere("SourceSolid", 0., sourceRadius/2, 0., 360.0*degree, 0., 180.0*degree);
+	G4Sphere* SourceSolid = new G4Sphere("SourceSolid", sourceRadius - 2.*mm, sourceRadius + 2.*mm, 0., 360.0*degree, 0., 180.0*degree);
 
 	SourceLogical = 
 		new G4LogicalVolume(SourceSolid,					// The Solid
@@ -222,7 +225,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 		new G4PVPlacement(	G4Transform3D(Housing_Rot,Housing_Trans),	// Translation
 							DetHousingLogical,					// Logical volume
 							"Detector_Housing_Physical",	// Name
-							SourceLogical,					// Mother volume
+							WorldLogical,					// Mother volume
 							false,							// Unused boolean parameter
 							0,								// Copy number
 							fCheckOverlaps);				// Overlap Check
@@ -388,17 +391,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   	// Visualisation attributes
   	
   	// World Volume (White)
-  	G4VisAttributes* Vis_World = new G4VisAttributes(G4Colour(1.,1.,1.,0.1));
-  	Vis_World->SetForceWireframe(true);
-  	WorldLogical->SetVisAttributes(Vis_World);
-
+  	G4VisAttributes* Vis_World = new G4VisAttributes(G4Colour(0.,0.,0.,0.));
+  	Vis_World->SetForceWireframe(false);
+  	//WorldLogical->SetVisAttributes(Vis_World);
+	WorldLogical->SetVisAttributes(G4VisAttributes::GetInvisible());
+	  
 	// Source Volume (Light Yellow)
-    G4VisAttributes* Vis_Source = new G4VisAttributes(G4Colour(1.,1.,0.,0.5));
-    Vis_Source->SetForceWireframe(true);
+    G4VisAttributes* Vis_Source = new G4VisAttributes(G4Colour(1.,1.,1.,0.1));
+    Vis_Source->SetForceWireframe(false);
     SourceLogical->SetVisAttributes(Vis_Source);
 
     // Housing Volume (Gray)
-    G4VisAttributes* Vis_Housing = new G4VisAttributes(G4Colour(0.5,0.5,0.5,.2));
+    G4VisAttributes* Vis_Housing = new G4VisAttributes(G4Colour(0.5,0.5,0.5,0.4));
     Vis_Housing->SetForceWireframe(false);
     DetHousingLogical->SetVisAttributes(Vis_Housing);
 
@@ -431,18 +435,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4VisAttributes* Vis_PMT_Interior = new G4VisAttributes(G4Colour(1.,1.,1.,0.5));
     Vis_PMT_Interior->SetForceWireframe(false);
     PMTInteriorLogical->SetVisAttributes(Vis_PMT_Interior);
-	
-	/*
-	// LaBr3 crystal (Magenta)
-    G4VisAttributes* Vis_LaBr3 = new G4VisAttributes(G4Colour(1.,0.,1.,1.));
-    Vis_LaBr3->SetForceWireframe(false);
-    LaBr3Logical->SetVisAttributes(Vis_LaBr3);
-
-	// Light Guide (Blue)
-    G4VisAttributes* Vis_LightGuide = new G4VisAttributes(G4Colour(0.,0.,1.,0.3));
-    Vis_LightGuide->SetForceWireframe(false);
-    LightGuideLogical->SetVisAttributes(Vis_LightGuide);
-	*/
 
 	////////////////////////////////////////////////////////////////////////
 	// Return world volume
@@ -471,13 +463,13 @@ void DetectorConstruction::ConstructSDandField()
 	G4MultiFunctionalDetector* SourceScorer = new G4MultiFunctionalDetector("Source");
 	G4SDManager::GetSDMpointer()->AddNewDetector(SourceScorer);	
 	G4SDManager::GetSDMpointer()->SetVerboseLevel(0);
-	WorldLogical->SetSensitiveDetector(SourceScorer);
+	SourceLogical->SetSensitiveDetector(SourceScorer);
 
-	G4VPrimitiveScorer* kinEGamma = new G4PSIncidentKineticEnergy("kinEGamma");
+	G4VPrimitiveScorer* kinEGamma = new G4PSIncidentKineticEnergy("kinEGamma", fCurrent_Out);
 	kinEGamma->SetFilter(gammaFilter);
     SourceScorer->RegisterPrimitive(kinEGamma);
 
-	G4VPrimitiveScorer* kinEElectron = new G4PSIncidentKineticEnergy("kinEElectron");
+	G4VPrimitiveScorer* kinEElectron = new G4PSIncidentKineticEnergy("kinEElectron", fCurrent_Out);
 	kinEElectron->SetFilter(electronFilter);
     SourceScorer->RegisterPrimitive(kinEElectron);
 }

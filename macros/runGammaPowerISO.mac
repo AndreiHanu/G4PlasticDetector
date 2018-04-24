@@ -2,8 +2,8 @@
 # Set the aliases for the rest of the macro file
 /control/alias Emin 10
 /control/alias Emax 10000
-/control/alias alpha 1
-/control/alias R 35
+/control/alias alpha -3
+/control/alias R 25
 /control/alias N_R 200000000
 /control/listAlias
 

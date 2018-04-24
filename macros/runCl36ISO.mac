@@ -1,7 +1,7 @@
 ##########################
 # Set the aliases for the rest of the macro file
 /control/alias R 25
-/control/alias N_R 20000000
+/control/alias N_R 200000000
 /control/listAlias
 
 #########################
@@ -23,7 +23,7 @@
 ##########################
 # Set name for the output file
 #
-/analysis/setFileName Sr90_R_{R}_cm_Nr_{N_R}_ISO
+/analysis/setFileName Cl36_Nr_{N_R}_R_{R}_ISO
 
 ##########################
 # Initialisation procedure
@@ -48,7 +48,7 @@
 # Set ion type and kinetic energy
 #
 /gps/particle ion
-/gps/ion 38 90 0 0
+/gps/ion 17 36 0 0
 /gps/energy 0 keV
 
 #########################

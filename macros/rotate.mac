@@ -1,11 +1,14 @@
 /vis/viewer/set/viewpointThetaPhi {theta} 0. deg
-/run/beamOn 10
+/run/beamOn 2
 
 # set print size larger than screen
-/vis/ogl/set/printFilename G4LaBr3Detector_{theta}_deg
+/vis/ogl/set/printFilename G4PlasticDetector_{theta}_deg
 /vis/ogl/set/printMode pixmap
 
 # print
 /vis/ogl/printEPS
 
-#/vis/viewer/flush
+# How to convert images to movie
+# convert -delay 2/360 G4PlasticDetector_{0..360}_deg_0000.eps video.mp4
+
+/vis/viewer/flush

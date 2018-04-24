@@ -27,22 +27,34 @@
 // G4PSIncidentKineticEnergy.cc
 //
 // Description: This is a custom primitive scorer class for scoring the
-// kinetic energy of a particle entering a volume.
+// kinetic energy of a particle entering or leaving a G4Sphere shape. 
+//
+// Surface is defined at the inside of sphere.
+// Direction                  -Rmin   +Rmax
+//   0  IN || OUT            ->|<-     |
+//   1  IN                   ->|       |
+//   2  OUT                    |<-     |
+//
 // ********************************************************************
 #include "G4PSIncidentKineticEnergy.hh"
 
+#include "G4SystemOfUnits.hh"
 #include "G4StepStatus.hh"
-#include "G4VProcess.hh"
+#include "G4Track.hh"
+#include "G4VSolid.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VPVParameterisation.hh"
 #include "G4UnitsTable.hh"
+#include "G4GeometryTolerance.hh"
 
-G4PSIncidentKineticEnergy::G4PSIncidentKineticEnergy(G4String name, G4int depth)
-    :G4VPrimitiveScorer(name,depth),HCID(-1),EvtMap(0)
+G4PSIncidentKineticEnergy::G4PSIncidentKineticEnergy(G4String name, G4int direction, G4int depth)
+    :G4VPrimitiveScorer(name,depth),HCID(-1),fDirection(direction),EvtMap(0)
 {
     SetUnit("MeV");
 }
 
-G4PSIncidentKineticEnergy::G4PSIncidentKineticEnergy(G4String name, const G4String& unit, G4int depth)
-    :G4VPrimitiveScorer(name,depth),HCID(-1),EvtMap(0)
+G4PSIncidentKineticEnergy::G4PSIncidentKineticEnergy(G4String name, G4int direction, const G4String& unit, G4int depth)
+    :G4VPrimitiveScorer(name,depth),HCID(-1),fDirection(direction),EvtMap(0)
 {
     SetUnit(unit);
 }
@@ -52,29 +64,68 @@ G4PSIncidentKineticEnergy::~G4PSIncidentKineticEnergy()
 
 G4bool G4PSIncidentKineticEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-    // The kinetic energy of a source particle will always be the largest
-    // kinetic energy ever recorded by this scorer. So instead of checking
-    // if the particle is a primary followed by checking for a volume boundary,
-    // it's better to compare the kinetic energies during each step.
-
-    // Check if this is the primary particle
-    if ( aStep->GetTrack()->GetParentID() != 0 ) {
-        // It's a secondary particles, check if it came from radioactive decay
-       if( aStep->GetTrack()->GetCreatorProcess()->GetProcessName() != "RadioactiveDecay") return FALSE;
+    G4StepPoint* preStep = aStep->GetPreStepPoint();
+    G4VPhysicalVolume* physVol = preStep->GetPhysicalVolume();
+    G4VPVParameterisation* physParam = physVol->GetParameterisation();
+    G4VSolid * solid = 0;
+    if(physParam){ // for parameterized volume
+        G4int idx = ((G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable()))->GetReplicaNumber(indexDepth);
+        solid = physParam->ComputeSolid(idx, physVol);
+        solid->ComputeDimensions(physParam,idx,physVol);
+    } else { // for ordinary volume
+        solid = physVol->GetLogicalVolume()->GetSolid();
     }
 
-    // Kinetic energy of this particle at the starting point.
-    G4double kineticEnergy = aStep->GetPreStepPoint()->GetKineticEnergy();
+    G4Sphere* sphereSolid = (G4Sphere*)(solid);
 
-    // Get the current stored value in the event map
-    G4int index = GetIndex(aStep);
-    G4double* mapValue = ((*EvtMap)[index]);
+    G4int dirFlag = IsSelectedSurface(aStep,sphereSolid);
+    if ( dirFlag > 0 ) {
+        if ( fDirection == fCurrent_InOut || fDirection == dirFlag ){
+            // Kinetic energy of this particle at the starting point.
+            G4double kineticEnergy = preStep->GetKineticEnergy();
+            G4int index = GetIndex(aStep);
+            EvtMap->add(index,kineticEnergy);
+        }
+    }
 
-    // If mapValue exits (e.g not NULL ), compare it with the current kinetic energy.
-    if ( mapValue && ( *mapValue > kineticEnergy ) ) return FALSE ;
-    else EvtMap->set(index, kineticEnergy);
+    //PrintAll();
 
     return TRUE;
+}
+
+G4int G4PSIncidentKineticEnergy::IsSelectedSurface(G4Step* aStep, G4Sphere* sphereSolid){
+
+    G4TouchableHandle theTouchable = aStep->GetPreStepPoint()->GetTouchableHandle();
+    G4double kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
+    
+    if (aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary ){
+        // Entering Geometry
+        G4ThreeVector stppos1= aStep->GetPreStepPoint()->GetPosition();
+        G4ThreeVector localpos1 = theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos1);
+        G4double localR2 = localpos1.x()*localpos1.x() 
+                            + localpos1.y()*localpos1.y()
+                            +localpos1.z()*localpos1.z();
+
+        G4double InsideRadius = sphereSolid->GetInnerRadius();
+        if ( localR2 > (InsideRadius-kCarTolerance)*(InsideRadius-kCarTolerance) && localR2 < (InsideRadius+kCarTolerance)*(InsideRadius+kCarTolerance)){
+            return fCurrent_In;
+        }
+    }
+
+    if (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary ){
+        // Exiting Geometry
+        G4ThreeVector stppos2= aStep->GetPostStepPoint()->GetPosition();
+        G4ThreeVector localpos2 = theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos2);
+        G4double localR2 = localpos2.x()*localpos2.x()
+                            +localpos2.y()*localpos2.y()
+                            +localpos2.z()*localpos2.z();
+
+        G4double InsideRadius = sphereSolid->GetInnerRadius();
+        if ( localR2 > (InsideRadius-kCarTolerance)*(InsideRadius-kCarTolerance) && localR2 < (InsideRadius+kCarTolerance)*(InsideRadius+kCarTolerance)){
+            return fCurrent_Out;
+        }
+    }
+    return -1;
 }
 
 void G4PSIncidentKineticEnergy::Initialize(G4HCofThisEvent* HCE)
@@ -107,7 +158,6 @@ void G4PSIncidentKineticEnergy::PrintAll()
 	      << G4endl;
     }
 }
-
 
 void G4PSIncidentKineticEnergy::SetUnit(const G4String& unit)
 {

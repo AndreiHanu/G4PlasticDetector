@@ -1,0 +1,141 @@
+##########################
+# Set the aliases for the rest of the macro file
+/control/alias R 25
+/control/alias N_R 2000000000
+/control/listAlias
+
+#########################
+# Set detector parameters
+#
+/G4PlasticDetector/DetectorAngle 0. deg
+/G4PlasticDetector/SourceRadius {R} cm
+
+##########################
+# Multi-threading mode
+#
+/run/numberOfThreads 8
+
+##########################
+# Set of the physic models
+#
+/cuts/setLowEdge 990 eV
+
+##########################
+# Set name for the output file
+#
+#/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO
+
+##########################
+# Initialisation procedure
+#
+/run/initialize
+
+##########################################################################################
+# Model the particle source along the surface of a sphere surrounding the detector
+
+/gps/pos/type Surface
+/gps/pos/shape Sphere
+/gps/pos/centre 0. 0. 0. cm
+/gps/pos/radius {R} cm
+
+##########################################################################################
+# Use the cosine angular distribution
+#
+/gps/ang/type cos
+/gps/ang/mintheta 0. deg
+/gps/ang/maxtheta 90. deg
+
+#########################
+# Set particle type and uniform energy distribution from a histogram
+#
+
+/gps/particle gamma
+/gps/ene/type Arb
+/gps/hist/type arb
+/gps/hist/point 0.01 1.0
+/gps/hist/point 3.6 1.0
+/gps/hist/inter Lin
+
+#########################
+# Run particles
+#
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_0
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_1
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_2
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_3
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_4
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_5
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_6
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_7
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_8
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_9
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_10
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_11
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_12
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_13
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_14
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_15
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_16
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_17
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_18
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_19
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_20
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_21
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_22
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_23
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_24
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_25
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_26
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_27
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_28
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_29
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_30
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_31
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_32
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_33
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_34
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_35
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_36
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_37
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_38
+/run/beamOn {N_R}
+/analysis/setFileName gamma_Uni_Lin_R_{R}_cm_Nr_{N_R}_ISO_39
+/run/beamOn {N_R}
