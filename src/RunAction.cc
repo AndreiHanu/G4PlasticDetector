@@ -89,26 +89,6 @@ detector(det), particleGun(primary)
 	analysisManager->SetH1YAxisTitle(H_Source_Electron_Lin, "Fluence (cm^{-2})");
 	analysisManager->SetH1Activation(H_Source_Electron_Lin, true);
 
-	G4int H_True_Gamma = analysisManager->CreateH1("Detector True Spectrum (Gamma)", "Detector True Spectrum for Gammas", EdgesLog);
-	analysisManager->SetH1XAxisTitle(H_True_Gamma, "True Energy (keV)");
-	analysisManager->SetH1YAxisTitle(H_True_Gamma, "# of Events");
-	analysisManager->SetH1Activation(H_True_Gamma, true);
-
-	G4int H_True_Gamma_Lin = analysisManager->CreateH1("Detector True Spectrum (Gamma) Linear", "Detector True Spectrum for Gammas", EdgesLin);
-	analysisManager->SetH1XAxisTitle(H_True_Gamma_Lin, "True Energy (keV)");
-	analysisManager->SetH1YAxisTitle(H_True_Gamma_Lin, "# of Events");
-	analysisManager->SetH1Activation(H_True_Gamma_Lin, true);
-	
-	G4int H_True_Electron = analysisManager->CreateH1("Detector True Spectrum (Electron)", "Detector True Spectrum for Electrons", EdgesLog);
-	analysisManager->SetH1XAxisTitle(H_True_Electron, "True Energy (keV)");
-	analysisManager->SetH1YAxisTitle(H_True_Electron, "# of Events");
-	analysisManager->SetH1Activation(H_True_Electron, true);
-
-	G4int H_True_Electron_Lin = analysisManager->CreateH1("Detector True Spectrum (Electron) Linear", "Detector True Spectrum for Electrons", EdgesLin);
-	analysisManager->SetH1XAxisTitle(H_True_Electron_Lin, "True Energy (keV)");
-	analysisManager->SetH1YAxisTitle(H_True_Electron_Lin, "# of Events");
-	analysisManager->SetH1Activation(H_True_Electron_Lin, true);
-
 	G4int H_Measured = analysisManager->CreateH1("Detector Measured Spectrum", "Detector Measured Spectrum", EdgesLog);
 	analysisManager->SetH1XAxisTitle(H_Measured, "Measured Energy (keV)");
 	analysisManager->SetH1YAxisTitle(H_Measured, "# of Events");

@@ -172,7 +172,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	// Note: The actual radius of the Source solid will be slightly smaller (1 mm) than
 	// specified in the macro files in order to allow tracking the incident kinetic energy
 	// of particles.
-	G4Sphere* SourceSolid = new G4Sphere("SourceSolid", sourceRadius - 2.*mm, sourceRadius + 2.*mm, 0., 360.0*degree, 0., 180.0*degree);
+	// NOTE: Make sure the outer radius is smaller than the source radius otherwise you'll
+	// get "track stuck" warnings during navigation.
+	G4Sphere* SourceSolid = new G4Sphere("SourceSolid", sourceRadius - 1.5*mm, sourceRadius - 0.5*mm, 0., 360.0*degree, 0., 180.0*degree);
+	SetSourceInnerRadius(SourceSolid->GetInnerRadius());
 
 	SourceLogical = 
 		new G4LogicalVolume(SourceSolid,					// The Solid
@@ -502,6 +505,13 @@ void DetectorConstruction::SetSourceRadius(G4double val)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void DetectorConstruction::SetSourceInnerRadius(G4double val)
+{
+	sourceInnerRadius = val;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 G4double DetectorConstruction::GetDetectorAngle()
 {
 	// Return the detector angle
@@ -512,8 +522,16 @@ G4double DetectorConstruction::GetDetectorAngle()
 
 G4double DetectorConstruction::GetSourceRadius()
 {
-	// Return the detector angle
+	// Return the source radius
 	return sourceRadius;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4double DetectorConstruction::GetSourceInnerRadius()
+{
+	// Return the source inner radius
+	return sourceInnerRadius;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

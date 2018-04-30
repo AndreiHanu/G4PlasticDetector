@@ -29,7 +29,7 @@
 // Description: This is a custom primitive scorer class for scoring the
 // kinetic energy of a particle entering or leaving a G4Sphere shape. 
 //
-// Surface is defined at the inside of sphere.
+// Surface is defined  at the inside of sphere.
 // Direction                  -Rmin   +Rmax
 //   0  IN || OUT            ->|<-     |
 //   1  IN                   ->|       |
@@ -66,21 +66,13 @@ G4bool G4PSIncidentKineticEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory*
 {
     G4StepPoint* preStep = aStep->GetPreStepPoint();
     G4VPhysicalVolume* physVol = preStep->GetPhysicalVolume();
-    G4VPVParameterisation* physParam = physVol->GetParameterisation();
-    G4VSolid * solid = 0;
-    if(physParam){ // for parameterized volume
-        G4int idx = ((G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable()))->GetReplicaNumber(indexDepth);
-        solid = physParam->ComputeSolid(idx, physVol);
-        solid->ComputeDimensions(physParam,idx,physVol);
-    } else { // for ordinary volume
-        solid = physVol->GetLogicalVolume()->GetSolid();
-    }
+    G4VSolid* solid = physVol->GetLogicalVolume()->GetSolid();
 
     G4Sphere* sphereSolid = (G4Sphere*)(solid);
 
     G4int dirFlag = IsSelectedSurface(aStep,sphereSolid);
     if ( dirFlag > 0 ) {
-        if ( fDirection == fCurrent_InOut || fDirection == dirFlag ){
+        if ( fDirection == dirFlag ){
             // Kinetic energy of this particle at the starting point.
             G4double kineticEnergy = preStep->GetKineticEnergy();
             G4int index = GetIndex(aStep);
@@ -88,13 +80,12 @@ G4bool G4PSIncidentKineticEnergy::ProcessHits(G4Step* aStep, G4TouchableHistory*
         }
     }
 
-    //PrintAll();
-
     return TRUE;
 }
 
-G4int G4PSIncidentKineticEnergy::IsSelectedSurface(G4Step* aStep, G4Sphere* sphereSolid){
-
+G4int G4PSIncidentKineticEnergy::IsSelectedSurface(G4Step* aStep, G4Sphere* sphereSolid)
+{
+    
     G4TouchableHandle theTouchable = aStep->GetPreStepPoint()->GetTouchableHandle();
     G4double kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
     
@@ -102,11 +93,11 @@ G4int G4PSIncidentKineticEnergy::IsSelectedSurface(G4Step* aStep, G4Sphere* sphe
         // Entering Geometry
         G4ThreeVector stppos1= aStep->GetPreStepPoint()->GetPosition();
         G4ThreeVector localpos1 = theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos1);
-        G4double localR2 = localpos1.x()*localpos1.x() 
-                            + localpos1.y()*localpos1.y()
-                            +localpos1.z()*localpos1.z();
-
+        G4double localR2 = localpos1.x()*localpos1.x()
+                        +localpos1.y()*localpos1.y()
+                        +localpos1.z()*localpos1.z();
         G4double InsideRadius = sphereSolid->GetInnerRadius();
+
         if ( localR2 > (InsideRadius-kCarTolerance)*(InsideRadius-kCarTolerance) && localR2 < (InsideRadius+kCarTolerance)*(InsideRadius+kCarTolerance)){
             return fCurrent_In;
         }
@@ -117,14 +108,15 @@ G4int G4PSIncidentKineticEnergy::IsSelectedSurface(G4Step* aStep, G4Sphere* sphe
         G4ThreeVector stppos2= aStep->GetPostStepPoint()->GetPosition();
         G4ThreeVector localpos2 = theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos2);
         G4double localR2 = localpos2.x()*localpos2.x()
-                            +localpos2.y()*localpos2.y()
-                            +localpos2.z()*localpos2.z();
-
+                        +localpos2.y()*localpos2.y()
+                        +localpos2.z()*localpos2.z();
         G4double InsideRadius = sphereSolid->GetInnerRadius();
+
         if ( localR2 > (InsideRadius-kCarTolerance)*(InsideRadius-kCarTolerance) && localR2 < (InsideRadius+kCarTolerance)*(InsideRadius+kCarTolerance)){
             return fCurrent_Out;
         }
     }
+
     return -1;
 }
 

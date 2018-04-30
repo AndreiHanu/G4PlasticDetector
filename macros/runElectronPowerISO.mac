@@ -1,7 +1,10 @@
 ##########################
 # Set the aliases for the rest of the macro file
+/control/alias Emin 10
+/control/alias Emax 10000
+/control/alias alpha -3
 /control/alias R 25
-/control/alias N_R 20000000
+/control/alias N_R 200000000
 /control/listAlias
 
 #########################
@@ -13,17 +16,17 @@
 ##########################
 # Multi-threading mode
 #
-/run/numberOfThreads 1
+/run/numberOfThreads 8
 
 ##########################
 # Set of the physic models
 #
-/cuts/setLowEdge 100 eV
+/cuts/setLowEdge 990 eV
 
 ##########################
 # Set name for the output file
 #
-/analysis/setFileName Sr90_R_{R}_cm_Nr_{N_R}_ISO
+/analysis/setFileName electron_Power_{Emin}_{Emax}_keV_alpha_{alpha}_R_{R}_cm_Nr_{N_R}_ISO
 
 ##########################
 # Initialisation procedure
@@ -41,15 +44,17 @@
 ##########################################################################################
 # Use the cosine angular distribution
 /gps/ang/type cos
-/gps/ang/mintheta 0. deg
-/gps/ang/maxtheta 90. deg
+/gps/ang/mintheta    0.000E+00 deg
+/gps/ang/maxtheta    9.000E+01 deg
 
 #########################
-# Set ion type and kinetic energy
+# Set particle type, energy, and distribution
 #
-/gps/particle ion
-/gps/ion 38 90 0 0
-/gps/energy 0 keV
+/gps/particle e-
+/gps/ene/type Pow
+/gps/ene/min {Emin} keV
+/gps/ene/max {Emax} keV
+/gps/ene/alpha {alpha}
 
 #########################
 # Run particles

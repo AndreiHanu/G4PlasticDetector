@@ -42,6 +42,7 @@ set(G4PLASTICDETECTOR_SCRIPTS
   macros/rotate.mac
   macros/runElectronUniformLinISO.mac
   macros/runElectronUniformLogISO.mac
+  macros/runElectronPowerISO.mac
   macros/runGammaPowerElectronGaussianISO.mac
   macros/runGammaUniformLinISO.mac
   macros/runGammaUniformLogISO.mac

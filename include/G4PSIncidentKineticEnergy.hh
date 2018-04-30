@@ -25,7 +25,7 @@ protected :
 
 private :
 	G4int HCID;
-	G4int  fDirection;
+	G4int fDirection;
 	G4THitsMap<G4double>* EvtMap;
 	
 };

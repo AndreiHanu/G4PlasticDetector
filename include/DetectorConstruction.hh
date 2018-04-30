@@ -30,8 +30,12 @@ class DetectorConstruction : public G4VUserDetectorConstruction
         // Get Methods
         G4double GetDetectorAngle();
         G4double GetSourceRadius();
+        G4double GetSourceInnerRadius();
     
     private:
+        // Set Methods
+        void SetSourceInnerRadius(G4double val);
+        
         // Defines all the detector materials
         void DefineMaterials();
     
@@ -76,6 +80,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 	    // Rotation Angles
 	    G4double rotX;
         G4double sourceRadius;
+        G4double sourceInnerRadius;
 
 };
 

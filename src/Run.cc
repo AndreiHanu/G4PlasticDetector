@@ -58,7 +58,7 @@ void Run::RecordEvent(const G4Event* event)
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
 	// Calculate the fluence for this event taking into account any angular biasing
-	G4double fluence = 1/(3.14159*std::pow(detector->GetSourceRadius()/cm, 2)*(std::pow(std::sin(particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMaxTheta()), 2)-std::pow(std::sin(particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMinTheta()), 2)));
+	G4double fluence = 1/(3.14159*std::pow(detector->GetSourceInnerRadius()/cm, 2)*(std::pow(std::sin(particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMaxTheta()), 2)-std::pow(std::sin(particleGun->GetGPS()->GetCurrentSource()->GetAngDist()->GetMinTheta()), 2)));
 	//G4double fluence = 1.;
 	
 	// Get the total energy deposited for this event
@@ -73,8 +73,6 @@ void Run::RecordEvent(const G4Event* event)
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Gamma)"), kinEGamma/keV, fluence);
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Gamma) Linear"), kinEGamma/keV, fluence);
 			if (eDep > 0){
-				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Gamma)"), kinEGamma/keV);
-				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Gamma) Linear"), kinEGamma/keV);
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Gamma)"), kinEGamma/keV, eDep/keV);
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Gamma) Linear"), kinEGamma/keV, eDep/keV);
 			}
@@ -88,8 +86,6 @@ void Run::RecordEvent(const G4Event* event)
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Electron)"), kinEElectron/keV, fluence);
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Electron) Linear"), kinEElectron/keV, fluence);
 			if (eDep > 0){
-				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Electron)"), kinEElectron/keV);
-				analysisManager->FillH1(analysisManager->GetH1Id("Detector True Spectrum (Electron) Linear"), kinEElectron/keV);
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Electron)"), kinEElectron/keV, eDep/keV);
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Electron) Linear"), kinEElectron/keV, eDep/keV);
 			}
