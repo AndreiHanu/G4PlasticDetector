@@ -1,7 +1,7 @@
 ##########################
 # Set the aliases for the rest of the macro file
 /control/alias R 25
-/control/alias N_R 20000000
+/control/alias N_R 200000000
 /control/listAlias
 
 #########################
@@ -13,7 +13,7 @@
 ##########################
 # Multi-threading mode
 #
-/run/numberOfThreads 1
+/run/numberOfThreads 8
 
 ##########################
 # Set of the physic models

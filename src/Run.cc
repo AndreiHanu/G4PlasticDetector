@@ -64,15 +64,17 @@ void Run::RecordEvent(const G4Event* event)
 	// Get the total energy deposited for this event
 	for (itr = event_eDep->GetMap()->begin(); itr != event_eDep->GetMap()->end(); itr++) {
 		eDep += *(itr->second);
+		//G4cout << "Edep "<< (itr->first) <<": " << *(itr->second)/MeV << G4endl;
 	}
 
 	// Get the incident kinetic energy for gammas in this event
 	for (itr = event_kinEGamma->GetMap()->begin(); itr != event_kinEGamma->GetMap()->end(); itr++) {
 		kinEGamma = *(itr->second);
+		//G4cout << "Ekin Gamma "<< (itr->first) <<": " << *(itr->second)/MeV << G4endl;
 		if (kinEGamma > 0){ 
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Gamma)"), kinEGamma/keV, fluence);
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Gamma) Linear"), kinEGamma/keV, fluence);
-			if (eDep > 0){
+			if (eDep > 0 && eDep < kinEGamma){
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Gamma)"), kinEGamma/keV, eDep/keV);
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Gamma) Linear"), kinEGamma/keV, eDep/keV);
 			}
@@ -82,10 +84,11 @@ void Run::RecordEvent(const G4Event* event)
 	// Get the incident kinetic energy for electrons in this event
 	for (itr = event_kinEElectron->GetMap()->begin(); itr != event_kinEElectron->GetMap()->end(); itr++) {
 		kinEElectron = *(itr->second);
+		//G4cout << "Ekin Beta "<< (itr->first) <<": " << *(itr->second)/MeV << G4endl;
 		if (kinEElectron > 0){
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Electron)"), kinEElectron/keV, fluence);
 			analysisManager->FillH1(analysisManager->GetH1Id("Source Spectrum (Electron) Linear"), kinEElectron/keV, fluence);
-			if (eDep > 0){
+			if (eDep > 0 && eDep < kinEElectron){
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Electron)"), kinEElectron/keV, eDep/keV);
 				analysisManager->FillH2(analysisManager->GetH2Id("Energy Migration Matrix (Electron) Linear"), kinEElectron/keV, eDep/keV);
 			}
