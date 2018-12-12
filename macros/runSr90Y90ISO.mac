@@ -1,0 +1,178 @@
+##########################
+# Set the aliases for the rest of the macro file
+/control/alias R 30
+/control/alias N_R 100000000
+/control/listAlias
+
+#########################
+# Set detector parameters
+#
+/G4PlasticDetector/DetectorAngle 0. deg
+/G4PlasticDetector/SourceRadius {R} cm
+
+##########################
+# Multi-threading mode
+#
+/run/numberOfThreads 8
+
+##########################
+# Set of the physic models
+#
+/cuts/setLowEdge 990 eV
+
+##########################
+# Set name for the output file
+#
+/analysis/setFileName Sr90Y90_R_{R}_cm_Nr_{N_R}_ISO
+
+##########################
+# Initialisation procedure
+#
+/run/initialize
+
+##########################################################################################
+# Model the particle source along the surface of a sphere surrounding the detector
+
+/gps/pos/type Surface
+/gps/pos/shape Sphere
+/gps/pos/centre 0. 0. 0. cm
+/gps/pos/radius {R} cm
+
+##########################################################################################
+# Use the cosine angular distribution
+/gps/ang/type cos
+/gps/ang/mintheta 0. deg
+/gps/ang/maxtheta 90. deg
+
+#########################
+# Setup the source spectrum for Sr-90/Y-90 from ICRP 107
+#
+/gps/particle e-
+/gps/ene/type Arb
+/gps/hist/type arb
+/gps/hist/point 0.000000 3.288900E+00
+/gps/hist/point 0.000100 3.286900E+00
+/gps/hist/point 0.000110 3.286900E+00
+/gps/hist/point 0.000120 3.286900E+00
+/gps/hist/point 0.000130 3.286900E+00
+/gps/hist/point 0.000140 3.285900E+00
+/gps/hist/point 0.000150 3.285900E+00
+/gps/hist/point 0.000160 3.285900E+00
+/gps/hist/point 0.000180 3.285900E+00
+/gps/hist/point 0.000200 3.285000E+00
+/gps/hist/point 0.000220 3.285000E+00
+/gps/hist/point 0.000240 3.285000E+00
+/gps/hist/point 0.000260 3.285000E+00
+/gps/hist/point 0.000280 3.284000E+00
+/gps/hist/point 0.000300 3.284000E+00
+/gps/hist/point 0.000320 3.284000E+00
+/gps/hist/point 0.000360 3.283000E+00
+/gps/hist/point 0.000400 3.282000E+00
+/gps/hist/point 0.000450 3.282000E+00
+/gps/hist/point 0.000500 3.281000E+00
+/gps/hist/point 0.000550 3.280000E+00
+/gps/hist/point 0.000600 3.279000E+00
+/gps/hist/point 0.000650 3.279000E+00
+/gps/hist/point 0.000700 3.278000E+00
+/gps/hist/point 0.000750 3.277000E+00
+/gps/hist/point 0.000800 3.276000E+00
+/gps/hist/point 0.000850 3.276000E+00
+/gps/hist/point 0.000900 3.275000E+00
+/gps/hist/point 0.001000 3.273000E+00
+/gps/hist/point 0.001100 3.272000E+00
+/gps/hist/point 0.001200 3.270000E+00
+/gps/hist/point 0.001300 3.269000E+00
+/gps/hist/point 0.001400 3.267000E+00
+/gps/hist/point 0.001500 3.266000E+00
+/gps/hist/point 0.001600 3.264100E+00
+/gps/hist/point 0.001800 3.261100E+00
+/gps/hist/point 0.002000 3.258100E+00
+/gps/hist/point 0.002200 3.255100E+00
+/gps/hist/point 0.002400 3.252100E+00
+/gps/hist/point 0.002600 3.249100E+00
+/gps/hist/point 0.002800 3.246100E+00
+/gps/hist/point 0.003000 3.243200E+00
+/gps/hist/point 0.003200 3.240200E+00
+/gps/hist/point 0.003600 3.234200E+00
+/gps/hist/point 0.004000 3.228200E+00
+/gps/hist/point 0.004500 3.220300E+00
+/gps/hist/point 0.005000 3.213300E+00
+/gps/hist/point 0.005500 3.205300E+00
+/gps/hist/point 0.006000 3.204500E+00
+/gps/hist/point 0.006500 3.202800E+00
+/gps/hist/point 0.007000 3.202100E+00
+/gps/hist/point 0.007500 3.200400E+00
+/gps/hist/point 0.008000 3.199800E+00
+/gps/hist/point 0.008500 3.199100E+00
+/gps/hist/point 0.009000 3.197400E+00
+/gps/hist/point 0.010000 3.196000E+00
+/gps/hist/point 0.011000 3.193600E+00
+/gps/hist/point 0.012000 3.191200E+00
+/gps/hist/point 0.013000 3.188800E+00
+/gps/hist/point 0.014000 3.186500E+00
+/gps/hist/point 0.015000 3.185100E+00
+/gps/hist/point 0.016000 3.182700E+00
+/gps/hist/point 0.018000 3.178900E+00
+/gps/hist/point 0.020000 3.174200E+00
+/gps/hist/point 0.022000 3.170400E+00
+/gps/hist/point 0.024000 3.167700E+00
+/gps/hist/point 0.026000 3.164000E+00
+/gps/hist/point 0.028000 3.161300E+00
+/gps/hist/point 0.030000 3.157600E+00
+/gps/hist/point 0.032000 3.155000E+00
+/gps/hist/point 0.036000 3.150700E+00
+/gps/hist/point 0.040000 3.146500E+00
+/gps/hist/point 0.045000 3.141100E+00
+/gps/hist/point 0.050000 3.137700E+00
+/gps/hist/point 0.055000 3.134300E+00
+/gps/hist/point 0.060000 3.131000E+00
+/gps/hist/point 0.065000 3.128800E+00
+/gps/hist/point 0.070000 3.125500E+00
+/gps/hist/point 0.075000 3.123300E+00
+/gps/hist/point 0.080000 3.121000E+00
+/gps/hist/point 0.085000 3.118800E+00
+/gps/hist/point 0.090000 3.116500E+00
+/gps/hist/point 0.100000 3.111000E+00
+/gps/hist/point 0.110000 3.105400E+00
+/gps/hist/point 0.120000 3.098700E+00
+/gps/hist/point 0.130000 3.089900E+00
+/gps/hist/point 0.140000 3.081000E+00
+/gps/hist/point 0.150000 3.070000E+00
+/gps/hist/point 0.160000 3.056900E+00
+/gps/hist/point 0.180000 3.024200E+00
+/gps/hist/point 0.200000 2.982000E+00
+/gps/hist/point 0.220000 2.927200E+00
+/gps/hist/point 0.240000 2.858800E+00
+/gps/hist/point 0.260000 2.775900E+00
+/gps/hist/point 0.280000 2.676400E+00
+/gps/hist/point 0.300000 2.560400E+00
+/gps/hist/point 0.320000 2.425700E+00
+/gps/hist/point 0.360000 2.104900E+00
+/gps/hist/point 0.400000 1.725900E+00
+/gps/hist/point 0.450000 1.217800E+00
+/gps/hist/point 0.500000 7.819000E-01
+/gps/hist/point 0.550000 6.102000E-01
+/gps/hist/point 0.600000 6.181000E-01
+/gps/hist/point 0.650000 6.238000E-01
+/gps/hist/point 0.700000 6.274000E-01
+/gps/hist/point 0.750000 6.292000E-01
+/gps/hist/point 0.800000 6.292000E-01
+/gps/hist/point 0.850000 6.276000E-01
+/gps/hist/point 0.900000 6.245000E-01
+/gps/hist/point 1.000000 6.141000E-01
+/gps/hist/point 1.100000 5.979000E-01
+/gps/hist/point 1.200000 5.756000E-01
+/gps/hist/point 1.300000 5.466000E-01
+/gps/hist/point 1.400000 5.099000E-01
+/gps/hist/point 1.500000 4.647000E-01
+/gps/hist/point 1.600000 4.105000E-01
+/gps/hist/point 1.800000 2.771000E-01
+/gps/hist/point 2.000000 1.276000E-01
+/gps/hist/point 2.200000 1.403000E-02
+/gps/hist/point 2.280100 0.000000E+00
+/gps/hist/inter Lin
+
+#########################
+# Run particles
+#
+/run/beamOn {N_R}

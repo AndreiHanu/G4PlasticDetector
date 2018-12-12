@@ -26,7 +26,7 @@
 
 # Create empty scene
 /vis/scene/create
-/vis/open OGLSQt 800x800-0+0
+/vis/open OGLSQt 320x320-0+0
 
 # Draw the scene
 /vis/drawVolume
@@ -44,7 +44,7 @@
 /vis/scene/add/trajectories
 #/vis/modeling/trajectories/create/drawByCharge
 #/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
-#/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 1
+#/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 10
 
 # Particle Filter
 /vis/filtering/trajectories/create/particleFilter
@@ -54,10 +54,10 @@
 # Choose Particle Colour
 /vis/modeling/trajectories/create/drawByParticleID
 /vis/modeling/trajectories/drawByParticleID-0/set gamma red
-/vis/modeling/trajectories/drawByParticleID-0/set e- yellow
+/vis/modeling/trajectories/drawByParticleID-0/set e- blue
 
 # Background Colour
-#/vis/viewer/set/background 255 255 255 !
+/vis/viewer/set/background 255 255 255 !
 
 # To superimpose all of the events from a given run:
 /vis/scene/endOfEventAction accumulate {N_R}

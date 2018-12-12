@@ -1,8 +1,8 @@
 ##########################
 # Set the aliases for the rest of the macro file
 #
-/control/alias R 25
-/control/alias N_R 2000000000
+/control/alias R 30
+/control/alias N_R 200000000
 /control/listAlias
 
 #########################

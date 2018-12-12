@@ -50,7 +50,7 @@ set(G4PLASTICDETECTOR_SCRIPTS
   macros/runCl36ISO.mac
   macros/runCo60ISO.mac
   macros/runCs137ISO.mac
-  macros/runSr90ISO.mac
+  macros/runSr90Y90ISO.mac
 )
 
 foreach(_script ${G4PLASTICDETECTOR_SCRIPTS})

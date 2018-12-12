@@ -5,10 +5,16 @@
 /vis/ogl/set/printFilename G4PlasticDetector_{theta}_deg
 /vis/ogl/set/printMode pixmap
 
-# print
+# Export or Print
+#/vis/ogl/export
 /vis/ogl/printEPS
 
+
+
 # How to convert images to movie
-# convert -delay 2/360 G4PlasticDetector_{0..360}_deg_0000.eps video.mp4
+# convert -delay 2/360 G4PlasticDetector_{0..360}_deg_0000.eps G4PlasticDetectorMC.mp4
+
+# How to cover to a gif image
+# convert -delay 10/360 -loop 0 -layers Optimize -fuzz 10% G4PlasticDetector_{0..360}_deg_0000.eps G4PlasticDetectorMC.gif
 
 /vis/viewer/flush

@@ -69,6 +69,9 @@ detector(det), particleGun(primary)
         binValueLin += dlin;
 	} 
 
+	// See Slide 49 of https://indico.ph.tum.de/event/3955/sessions/752/attachments/2741/3102/Day3_Kernel1.pdf for making
+	// log binned histograms automatically
+
 	G4int H_Source_Gamma = analysisManager->CreateH1("Source Spectrum (Gamma)", "Source Spectrum for Gammas", EdgesLog);
 	analysisManager->SetH1XAxisTitle(H_Source_Gamma, "True Energy (keV)");
 	analysisManager->SetH1YAxisTitle(H_Source_Gamma, "Fluence (cm^{-2})");
