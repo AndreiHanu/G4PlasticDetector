@@ -118,8 +118,8 @@ void DetectorConstruction::DefineMaterials()
 	nistManager->SetVerbose(0);
 	  
   	// Set the materials for the Geometry
-	//fMatWorld = nistManager->FindOrBuildMaterial("G4_Galactic");
-	fMatWorld = nistManager->FindOrBuildMaterial("G4_AIR");
+	fMatWorld = nistManager->FindOrBuildMaterial("G4_Galactic");
+	//fMatWorld = nistManager->FindOrBuildMaterial("G4_AIR");
 	fMatDetHousing = nistManager->FindOrBuildMaterial("G4_Al");
 	fMatEntranceWindow = nistManager->FindOrBuildMaterial("G4_MYLAR");
 	fMatEJ204 = nistManager->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
