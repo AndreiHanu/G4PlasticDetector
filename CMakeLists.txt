@@ -48,7 +48,9 @@ set(G4PLASTICDETECTOR_SCRIPTS
   macros/runGammaUniformLogISO.mac
   macros/runGammaPowerISO.mac
   macros/runCl36ISO.mac
+  macros/runKr85ISO.mac
   macros/runSr90Y90ISO.mac
+  macros/runCs137ISO.mac
 )
 
 foreach(_script ${G4PLASTICDETECTOR_SCRIPTS})

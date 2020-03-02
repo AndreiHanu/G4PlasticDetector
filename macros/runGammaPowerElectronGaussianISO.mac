@@ -3,10 +3,10 @@
 /control/alias Emin 10
 /control/alias Emax 10000
 /control/alias alpha -3
-/control/alias Emean 2000
-/control/alias Esigma 100
+/control/alias Emean 600
+/control/alias Esigma 600
 /control/alias R 25
-/control/alias N_R 200000000
+/control/alias N_R 100000000
 /control/listAlias
 
 #########################

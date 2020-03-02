@@ -1,8 +1,5 @@
 ##########################
 # Set the aliases for the rest of the macro file
-/control/alias Emin 10
-/control/alias Emax 10000
-/control/alias alpha -2
 /control/alias R 25
 /control/alias N_R 100000000
 /control/listAlias
@@ -16,7 +13,7 @@
 ##########################
 # Multi-threading mode
 #
-/run/numberOfThreads 8
+/run/numberOfThreads 1
 
 ##########################
 # Set of the physic models
@@ -26,7 +23,7 @@
 ##########################
 # Set name for the output file
 #
-/analysis/setFileName electron_Power_{Emin}_{Emax}_keV_alpha_{alpha}_R_{R}_cm_Nr_{N_R}_ISO
+/analysis/setFileName Cs137_R_{R}_cm_Nr_{N_R}_ISO
 
 ##########################
 # Initialisation procedure
@@ -48,13 +45,11 @@
 /gps/ang/maxtheta 90. deg
 
 #########################
-# Set particle type, energy, and distribution
+# Set ion type and kinetic energy
 #
-/gps/particle e-
-/gps/ene/type Pow
-/gps/ene/min {Emin} keV
-/gps/ene/max {Emax} keV
-/gps/ene/alpha {alpha}
+/gps/particle ion
+/gps/ion 55 137 0 0
+/gps/energy 0 keV
 
 #########################
 # Run particles
